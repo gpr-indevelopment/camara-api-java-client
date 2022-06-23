@@ -11,7 +11,6 @@ public class DeputadoDeserializer implements JsonDeserializer<Deputado> {
 
     @Override
     public Deputado deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-        // Complementar com os demais campos do Deputado
         JsonObject jsonObject = (JsonObject) json;
         JsonElement ultimoStatusElement = jsonObject.get("ultimoStatus");
         if (ultimoStatusElement != null) {

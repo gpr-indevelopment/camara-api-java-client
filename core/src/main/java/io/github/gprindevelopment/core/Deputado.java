@@ -1,14 +1,19 @@
 package io.github.gprindevelopment.core;
 
+import io.github.gprindevelopment.core.common.Estado;
+
 public class Deputado {
 
     private final String nome;
 
     private final int idLegislatura;
 
-    public Deputado(String nome, int idLegislatura) {
+    private final Estado siglaUf;
+
+    public Deputado(String nome, int idLegislatura, Estado siglaUf) {
         this.nome = nome;
         this.idLegislatura = idLegislatura;
+        this.siglaUf = siglaUf;
     }
 
     public int getIdLegislatura() {
@@ -17,6 +22,10 @@ public class Deputado {
 
     public String getNome() {
         return nome;
+    }
+
+    public Estado getSiglaUf() {
+        return siglaUf;
     }
 
     public String getNomeFormatado() {
