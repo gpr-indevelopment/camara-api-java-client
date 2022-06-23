@@ -72,7 +72,15 @@ public class DeputadoClientTest {
                 .build();
         Pagina<Deputado> pagina = client.consultar(consulta);
         assertEquals(1, pagina.size());
-        assertTrue(pagina.get(0).getNomeFormatado().contains(nome));
+        Deputado freixo = pagina.get(0);
+        assertTrue(freixo.getNomeFormatado().contains(nome));
+        assertEquals(76874, freixo.getId());
+        assertEquals("https://dadosabertos.camara.leg.br/api/v2/deputados/76874", freixo.getUri().toString());
+        assertEquals("PSB", freixo.getSiglaPartido());
+        assertEquals(Estado.RJ, freixo.getSiglaUf());
+        assertEquals(56, freixo.getIdLegislatura());
+        assertEquals("https://www.camara.leg.br/internet/deputado/bandep/76874.jpg", freixo.getUrlFoto().toString());
+        assertEquals("dep.marcelofreixo@camara.leg.br", freixo.getEmail());
     }
 
     @Test

@@ -2,7 +2,20 @@ package io.github.gprindevelopment.core;
 
 import io.github.gprindevelopment.core.common.Estado;
 
+import java.net.URI;
+import java.net.URL;
+
 public class Deputado {
+
+    private final long id;
+
+    private final URL uri;
+
+    private final String siglaPartido;
+
+    private final URI urlFoto;
+
+    private final String email;
 
     private final String nome;
 
@@ -10,7 +23,12 @@ public class Deputado {
 
     private final Estado siglaUf;
 
-    public Deputado(String nome, int idLegislatura, Estado siglaUf) {
+    public Deputado(long id, URL uri, String siglaPartido, URI urlFoto, String email, String nome, int idLegislatura, Estado siglaUf) {
+        this.id = id;
+        this.uri = uri;
+        this.siglaPartido = siglaPartido;
+        this.urlFoto = urlFoto;
+        this.email = email;
         this.nome = nome;
         this.idLegislatura = idLegislatura;
         this.siglaUf = siglaUf;
@@ -26,6 +44,26 @@ public class Deputado {
 
     public Estado getSiglaUf() {
         return siglaUf;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public URL getUri() {
+        return uri;
+    }
+
+    public String getSiglaPartido() {
+        return siglaPartido;
+    }
+
+    public URI getUrlFoto() {
+        return urlFoto;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public String getNomeFormatado() {
