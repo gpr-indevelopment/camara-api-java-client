@@ -6,6 +6,7 @@
 
     <groupId>io.github.gpr-indevelopment</groupId>
     <artifactId>camara-api-java-client-parent</artifactId>
+    <name>Parent</name>
     <version>${revision}</version>
     <packaging>pom</packaging>
     <modules>

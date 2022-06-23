@@ -1,6 +1,6 @@
 package io.github.gprindevelopment.rest.mother;
 
-import io.github.gprindevelopment.core.ConstantesCamara;
+import io.github.gprindevelopment.core.common.ConstantesCamara;
 import okhttp3.*;
 
 public class ResponseMother {

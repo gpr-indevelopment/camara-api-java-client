@@ -1,4 +1,4 @@
-package io.github.gprindevelopment.rest.common;
+package io.github.gprindevelopment.core.exception;
 
 public class CamaraClientStatusException extends Exception {
 
