@@ -5,6 +5,7 @@ import io.github.gprindevelopment.core.common.Ordem;
 import io.github.gprindevelopment.core.common.Pagina;
 import io.github.gprindevelopment.core.exception.CamaraClientStatusException;
 import io.github.gprindevelopment.core.exception.RespostaNaoEsperadaException;
+import io.github.gprindevelopment.rest.common.ConsultaPaginada;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -31,7 +32,7 @@ public class LegislaturaClientTest {
     public void consulta_paginada_e_ordenada_de_legislaturas() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException, URISyntaxException {
         int itens = 10;
         int paginaAtual = 1;
-        ConsultaLegislatura consulta = new ConsultaLegislatura.Builder()
+        ConsultaPaginada consulta = new ConsultaPaginada.Builder()
                 .ordenarPor("id", Ordem.DESC)
                 .itens(itens)
                 .pagina(paginaAtual)
@@ -52,7 +53,7 @@ public class LegislaturaClientTest {
 
     @Test
     public void consulta_sem_parametros_assume_default_da_camara() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException, URISyntaxException {
-        ConsultaLegislatura consulta = new ConsultaLegislatura.Builder().build();
+        ConsultaPaginada consulta = new ConsultaPaginada.Builder().build();
         Pagina<Legislatura> pagina = client.consultar(consulta);
         assertEquals(15, pagina.size());
         assertEquals(ID_LEGISLATURA_CORRENTE, pagina.getTotal());
@@ -64,7 +65,7 @@ public class LegislaturaClientTest {
     @Test
     public void consulta_com_pagina_fora_do_limite_retorna_vazia() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException {
         int paginaAtual = 150;
-        ConsultaLegislatura consulta = new ConsultaLegislatura.Builder()
+        ConsultaPaginada consulta = new ConsultaPaginada.Builder()
                 .ordenarPor("id", Ordem.DESC)
                 .itens(10)
                 .pagina(paginaAtual)

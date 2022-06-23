@@ -2,16 +2,27 @@ package io.github.gprindevelopment.rest.common;
 
 import com.google.gson.reflect.TypeToken;
 import io.github.gprindevelopment.core.common.ConstantesCamara;
+import io.github.gprindevelopment.core.common.Pagina;
 import io.github.gprindevelopment.core.exception.CamaraClientStatusException;
 import io.github.gprindevelopment.core.exception.RespostaNaoEsperadaException;
-import okhttp3.Call;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
+import okhttp3.*;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.List;
+import java.util.Objects;
 
 public class ComponenteClient {
+
+    protected final OkHttpClient client;
+
+    public ComponenteClient(OkHttpClient client) {
+        this.client = client;
+    }
+
+    public ComponenteClient() {
+        this.client = new OkHttpClient();
+    }
 
     protected <T> RespostaCamara<T> executarChamada(Call chamada, Type tipoResposta) throws IOException, CamaraClientStatusException, RespostaNaoEsperadaException {
         try (Response resposta = chamada.execute()) {
@@ -48,5 +59,56 @@ public class ComponenteClient {
             throw new RespostaNaoEsperadaException("Uma consulta páginada esperava o cabeçalho x-total-count do número total de itens, mas ele está vazio.");
         }
         return Integer.parseInt(valorCabecalho);
+    }
+
+    protected <T> RespostaCamara<T> consultarPorId(int id, String urlBase, Type tipoEsperado) throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException {
+        HttpUrl url = construirUrl(urlBase);
+        HttpUrl.Builder urlBuilder = url
+                .newBuilder()
+                .addEncodedPathSegments(String.valueOf(id));
+        Request request = new Request.Builder()
+                .url(urlBuilder.build().toString())
+                .header("accept", "application/json")
+                .build();
+        Call chamada = client.newCall(request);
+        return executarChamada(chamada, tipoEsperado);
+    }
+
+    protected <T> Pagina<T> consultarComPaginacao(ConsultaPaginada consulta, String urlBase, Type tipoEsperado) throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException {
+        Objects.requireNonNull(consulta, "O objeto de consulta não pode ser null. Favor utilizar um objeto vazio se desejar uma consulta sem parâmetros.");
+        HttpUrl url = construirUrl(urlBase);
+        HttpUrl.Builder urlBuilder = url.newBuilder();
+        consulta.getParametros().forEach(urlBuilder::addQueryParameter);
+        Request request = new Request.Builder()
+                .url(urlBuilder.build().toString())
+                .header("accept", "application/json")
+                .build();
+        Call chamada = client.newCall(request);
+        RespostaCamara<List<T>> resposta = executarChamada(chamada, TypeToken.getParameterized(List.class, tipoEsperado).getType());
+
+        return new Pagina<>(resposta.getDados(),
+                extrairCabecalhoTotalItens(resposta),
+                extrairPaginaDaConsulta(consulta));
+    }
+
+    private int extrairPaginaDaConsulta(ConsultaPaginada consulta) {
+        String paginaString = consulta.getParametros().get("pagina");
+        if (paginaString == null || paginaString.isBlank()) {
+            paginaString = "1";
+        }
+        return Integer.parseInt(paginaString);
+    }
+
+    private HttpUrl construirUrl(String urlBase) {
+        urlBase = Objects.requireNonNull(urlBase, "Uma consulta por ID precisa de uma URL base para concatenação do ID");
+        if (urlBase.isBlank()) {
+            throw new IllegalArgumentException("A URL base para concatenação do ID na consulta por ID não pode estar em branco");
+        }
+        HttpUrl url = HttpUrl.parse(urlBase);
+        if (url == null) {
+            String mensagem = String.format("A URL base %s informada não pode ser interpretada como uma URL", urlBase);
+            throw new IllegalArgumentException(mensagem);
+        }
+        return url;
     }
 }
