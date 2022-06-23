@@ -11,10 +11,13 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class LegislaturaClientTest {
+
+    private static final int ID_LEGISLATURA_CORRENTE = 56;
 
     private final LegislaturaClient client = new LegislaturaClient();
 
@@ -27,7 +30,6 @@ public class LegislaturaClientTest {
     @Test
     public void consulta_paginada_e_ordenada_de_legislaturas() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException, URISyntaxException {
         int itens = 10;
-        int total = 56;
         int paginaAtual = 1;
         ConsultaLegislatura consulta = new ConsultaLegislatura.Builder()
                 .ordenarPor("id", Ordem.DESC)
@@ -36,7 +38,7 @@ public class LegislaturaClientTest {
                 .build();
         Pagina<Legislatura> pagina = client.consultar(consulta);
         assertEquals(itens, pagina.size());
-        assertEquals(total, pagina.getTotal());
+        assertEquals(ID_LEGISLATURA_CORRENTE, pagina.getTotal());
         assertEquals(paginaAtual, pagina.getPaginaAtual());
         assertTrue(pagina.temProxima());
         assertTrue(pagina.contains(construirLegislaturaAtual()));
@@ -53,7 +55,7 @@ public class LegislaturaClientTest {
         ConsultaLegislatura consulta = new ConsultaLegislatura.Builder().build();
         Pagina<Legislatura> pagina = client.consultar(consulta);
         assertEquals(15, pagina.size());
-        assertEquals(56, pagina.getTotal());
+        assertEquals(ID_LEGISLATURA_CORRENTE, pagina.getTotal());
         assertEquals(1, pagina.getPaginaAtual());
         assertTrue(pagina.temProxima());
         assertTrue(pagina.contains(construirLegislaturaAtual()));
@@ -69,13 +71,26 @@ public class LegislaturaClientTest {
                 .build();
         Pagina<Legislatura> pagina = client.consultar(consulta);
         assertTrue(pagina.isEmpty());
-        assertEquals(56, pagina.getTotal());
+        assertEquals(ID_LEGISLATURA_CORRENTE, pagina.getTotal());
         assertEquals(paginaAtual, pagina.getPaginaAtual());
         assertFalse(pagina.temProxima());
     }
 
+    @Test
+    public void consultar_legislatura_por_id_retorna_uma_legislatura() throws URISyntaxException, RespostaNaoEsperadaException, CamaraClientStatusException, IOException {
+        Optional<Legislatura> legislaturaOpt = client.consultarLegislaturaPorId(ID_LEGISLATURA_CORRENTE);
+        assertTrue(legislaturaOpt.isPresent());
+        assertEquals(construirLegislaturaAtual(), legislaturaOpt.get());
+    }
+
+    @Test
+    public void consultar_legislatura_por_id_quando_nao_existe_retorna_optional_empty() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException {
+        Optional<Legislatura> legislaturaOpt = client.consultarLegislaturaPorId(99999);
+        assertTrue(legislaturaOpt.isEmpty());
+    }
+
     private Legislatura construirLegislaturaAtual() throws URISyntaxException {
-        return new Legislatura(56,
+        return new Legislatura(ID_LEGISLATURA_CORRENTE,
                 new URI("https://dadosabertos.camara.leg.br/api/v2/legislaturas/56"),
                 LocalDate.of(2019, 2, 1),
                 LocalDate.of(2023, 1, 31));

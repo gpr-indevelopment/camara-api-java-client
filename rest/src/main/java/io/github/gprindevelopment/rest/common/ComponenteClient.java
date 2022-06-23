@@ -15,6 +15,12 @@ public class ComponenteClient {
 
     protected <T> RespostaCamara<T> executarChamada(Call chamada, Type tipoResposta) throws IOException, CamaraClientStatusException, RespostaNaoEsperadaException {
         try (Response resposta = chamada.execute()) {
+            if (resposta.code() == 404) {
+                RespostaCamara<T> resultadoVazio = new RespostaCamara<>(null);
+                resultadoVazio.setCabecalhos(resposta.headers());
+                resultadoVazio.setStatusCode(resposta.code());
+                return resultadoVazio;
+            }
             if (resposta.code() != 200) {
                 throw new CamaraClientStatusException(resposta.code(),
                         resposta.body() != null ? resposta.body().string() : null);
@@ -28,6 +34,7 @@ public class ComponenteClient {
             Type tipoEmbrulhado = TypeToken.getParameterized(RespostaCamara.class, tipoResposta).getType();
             RespostaCamara<T> resultado = GsonSingleton.getInstancia().fromJson(json, tipoEmbrulhado);
             resultado.setCabecalhos(resposta.headers());
+            resultado.setStatusCode(resposta.code());
             return resultado;
         }
     }

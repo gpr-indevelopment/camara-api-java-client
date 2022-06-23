@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public class LegislaturaClient extends ComponenteClient {
 
@@ -37,6 +38,19 @@ public class LegislaturaClient extends ComponenteClient {
                 .ordenarPor("id", Ordem.DESC)
                 .build();
         return consultar(consulta).get(0);
+    }
+
+    public Optional<Legislatura> consultarLegislaturaPorId(int id) throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException {
+        HttpUrl.Builder urlBuilder = BASE_URL.newBuilder()
+                .addEncodedPathSegments(String.valueOf(id));
+        Request request = new Request.Builder()
+                .url(urlBuilder.build().toString())
+                .header("accept", "application/json")
+                .build();
+        Call chamada = client.newCall(request);
+        Type tipoEsperado = new TypeToken<Legislatura>() {}.getType();
+        RespostaCamara<Legislatura> resposta = executarChamada(chamada, tipoEsperado);
+        return Optional.ofNullable(resposta.getDados());
     }
 
     public Pagina<Legislatura> consultar(ConsultaLegislatura consulta) throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException {

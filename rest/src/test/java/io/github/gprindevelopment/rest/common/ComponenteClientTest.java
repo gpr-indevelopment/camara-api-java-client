@@ -76,4 +76,31 @@ public class ComponenteClientTest {
         int extraido = client.extrairCabecalhoTotalItens(respostaCamara);
         assertEquals(totalItens, extraido);
     }
+
+    @Test
+    public void resposta_404_retorna_resposta_vazia_e_nao_um_erro() throws IOException, RespostaNaoEsperadaException, CamaraClientStatusException {
+        int statusCode = 404;
+        Response resposta = ResponseMother.gerarResponse("Teste", statusCode);
+
+        Call chamada = mock(Call.class);
+        when(chamada.execute()).thenReturn(resposta);
+
+        RespostaCamara<String> resultado = client.executarChamada(chamada, String.class);
+        assertNull(resultado.getDados());
+        assertEquals(statusCode, resultado.getStatusCode());
+    }
+
+    @Test
+    public void resposta_valida_retorna_objeto_de_dados_com_status_200() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException {
+        int statusCode = 200;
+        String corpoEsperado = "{\"dados\": \"Teste\"}";
+        Response resposta = ResponseMother.gerarResponse(corpoEsperado, statusCode);
+
+        Call chamada = mock(Call.class);
+        when(chamada.execute()).thenReturn(resposta);
+
+        RespostaCamara<String> resultado = client.executarChamada(chamada, String.class);
+        assertEquals(statusCode, resultado.getStatusCode());
+        assertEquals("Teste", resultado.getDados());
+    }
 }

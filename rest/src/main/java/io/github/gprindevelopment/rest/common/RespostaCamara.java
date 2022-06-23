@@ -7,6 +7,8 @@ public class RespostaCamara<T> {
     private Headers cabecalhos;
     private final T dados;
 
+    private int statusCode;
+
     public RespostaCamara(T dados) {
         this.dados = dados;
     }
@@ -21,5 +23,13 @@ public class RespostaCamara<T> {
 
     public Headers getCabecalhos() {
         return cabecalhos;
+    }
+
+    public int getStatusCode() {
+        return statusCode;
+    }
+
+    public void setStatusCode(int statusCode) {
+        this.statusCode = statusCode;
     }
 }
