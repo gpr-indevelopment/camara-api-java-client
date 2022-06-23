@@ -4,8 +4,15 @@ public class Deputado {
 
     private final String nome;
 
-    public Deputado(String nome) {
+    private final int idLegislatura;
+
+    public Deputado(String nome, int idLegislatura) {
         this.nome = nome;
+        this.idLegislatura = idLegislatura;
+    }
+
+    public int getIdLegislatura() {
+        return idLegislatura;
     }
 
     public String getNome() {

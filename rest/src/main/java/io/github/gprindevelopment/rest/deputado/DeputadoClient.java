@@ -6,7 +6,6 @@ import io.github.gprindevelopment.core.common.Pagina;
 import io.github.gprindevelopment.core.exception.CamaraClientStatusException;
 import io.github.gprindevelopment.core.exception.RespostaNaoEsperadaException;
 import io.github.gprindevelopment.rest.common.ComponenteClient;
-import io.github.gprindevelopment.rest.common.ConsultaPaginada;
 import io.github.gprindevelopment.rest.common.RespostaCamara;
 
 import java.io.IOException;
@@ -19,7 +18,7 @@ public class DeputadoClient extends ComponenteClient {
         return Optional.ofNullable(resposta.getDados());
     }
 
-    public Pagina<Deputado> consultar(ConsultaPaginada consulta) throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException {
+    public Pagina<Deputado> consultar(ConsultaDeputado consulta) throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException {
         return consultarComPaginacao(consulta, ConstantesCamara.DEPUTADO_API_URL, Deputado.class);
     }
 }

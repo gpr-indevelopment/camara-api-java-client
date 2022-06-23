@@ -5,11 +5,12 @@ import io.github.gprindevelopment.core.common.Ordem;
 import io.github.gprindevelopment.core.common.Pagina;
 import io.github.gprindevelopment.core.exception.CamaraClientStatusException;
 import io.github.gprindevelopment.core.exception.RespostaNaoEsperadaException;
-import io.github.gprindevelopment.rest.common.ConsultaPaginada;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Optional;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,8 +23,8 @@ public class DeputadoClientTest {
         int deputado = 76874;
         Optional<Deputado> deputadoOpt = client.consultarDeputadoPorId(deputado);
         assertTrue(deputadoOpt.isPresent());
-        assertEquals("Marcelo Ribeiro Freixo", deputadoOpt.get().getNomeFormatado());
-        assertEquals("MARCELO RIBEIRO FREIXO", deputadoOpt.get().getNome());
+        assertEquals("Marcelo Freixo", deputadoOpt.get().getNomeFormatado());
+        assertEquals("Marcelo Freixo", deputadoOpt.get().getNome());
     }
 
     @Test
@@ -37,7 +38,7 @@ public class DeputadoClientTest {
     public void consulta_paginada_de_deputados_retorna_uma_pagina_de_deputados() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException {
         int itens = 10;
         int paginaAtual = 1;
-        ConsultaPaginada consulta = new ConsultaPaginada.Builder()
+        ConsultaDeputado consulta = new ConsultaDeputado.Builder()
                 .ordenarPor("id", Ordem.DESC)
                 .itens(itens)
                 .pagina(paginaAtual)
@@ -51,9 +52,44 @@ public class DeputadoClientTest {
 
     @Test
     public void consulta_paginada_sem_parametros_usa_default_da_camara() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException {
-        Pagina<Deputado> pagina = client.consultar(new ConsultaPaginada.Builder().build());
+        Pagina<Deputado> pagina = client.consultar(new ConsultaDeputado.Builder().build());
         assertFalse(pagina.isEmpty());
         assertFalse(pagina.temProxima());
         assertEquals(1, pagina.getPaginaAtual());
+    }
+
+    @Test
+    public void consulta_paginada_por_nome_retorna_deputados_corretos() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException {
+        String nome = "Freixo";
+        ConsultaDeputado consulta = new ConsultaDeputado.Builder()
+                .nome(nome)
+                .ordenarPor("id", Ordem.DESC)
+                .pagina(1)
+                .itens(10)
+                .build();
+        Pagina<Deputado> pagina = client.consultar(consulta);
+        assertEquals(1, pagina.size());
+        assertTrue(pagina.get(0).getNomeFormatado().contains(nome));
+    }
+
+    @Test
+    public void consulta_paginada_por_id_legislatura_retorna_deputados_corretos() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException {
+        int itens = 20;
+        int paginaAtual = 1;
+        int[] legislaturasEsperadas = new int[]{56,55};
+        ConsultaDeputado consulta = new ConsultaDeputado.Builder()
+                .legislaturas(legislaturasEsperadas)
+                .ordenarPor("nome", Ordem.DESC)
+                .pagina(paginaAtual)
+                .itens(itens)
+                .build();
+        Pagina<Deputado> pagina = client.consultar(consulta);
+        assertEquals(itens, pagina.size());
+        assertEquals(paginaAtual, pagina.getPaginaAtual());
+        pagina.forEach(deputado -> {
+            int legislaturaDeputado = deputado.getIdLegislatura();
+            IntStream stream = Arrays.stream(legislaturasEsperadas);
+            assertTrue(stream.anyMatch(a -> a == legislaturaDeputado));
+        });
     }
 }

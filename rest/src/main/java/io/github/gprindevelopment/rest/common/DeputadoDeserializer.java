@@ -7,14 +7,16 @@ import java.lang.reflect.Type;
 
 public class DeputadoDeserializer implements JsonDeserializer<Deputado> {
 
+    private final Gson gson = new Gson();
+
     @Override
     public Deputado deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         // Complementar com os demais campos do Deputado
         JsonObject jsonObject = (JsonObject) json;
-        JsonElement elementoNome = jsonObject.get("nome");
-        if (elementoNome == null) {
-            elementoNome = jsonObject.get("nomeCivil");
+        JsonElement ultimoStatusElement = jsonObject.get("ultimoStatus");
+        if (ultimoStatusElement != null) {
+            json = ultimoStatusElement;
         }
-        return new Deputado(elementoNome.getAsString());
+        return gson.fromJson(json, Deputado.class);
     }
 }
