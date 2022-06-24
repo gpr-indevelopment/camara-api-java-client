@@ -30,11 +30,7 @@ public class ConsultaDeputado extends ConsultaPaginada {
         }
 
         public Builder legislaturas(int... legislaturas) {
-            StringBuilder sb = new StringBuilder();
-            for (int legislatura : legislaturas) {
-                sb.append(legislatura).append(",");
-            }
-            parametros.put("idLegislatura", sb.substring(0, sb.length()-1));
+            adicionarParamMultiValores("idLegislatura", legislaturas);
             return this;
         }
 

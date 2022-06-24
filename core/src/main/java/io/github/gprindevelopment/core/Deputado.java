@@ -2,18 +2,18 @@ package io.github.gprindevelopment.core;
 
 import io.github.gprindevelopment.core.common.Estado;
 
-import java.net.URI;
 import java.net.URL;
+import java.util.Objects;
 
-public class Deputado {
+public class Deputado implements Comparable<Deputado> {
 
-    private final long id;
+    private final int id;
 
     private final URL uri;
 
     private final String siglaPartido;
 
-    private final URI urlFoto;
+    private final URL urlFoto;
 
     private final String email;
 
@@ -23,7 +23,7 @@ public class Deputado {
 
     private final Estado siglaUf;
 
-    public Deputado(long id, URL uri, String siglaPartido, URI urlFoto, String email, String nome, int idLegislatura, Estado siglaUf) {
+    public Deputado(int id, URL uri, String siglaPartido, URL urlFoto, String email, String nome, int idLegislatura, Estado siglaUf) {
         this.id = id;
         this.uri = uri;
         this.siglaPartido = siglaPartido;
@@ -46,7 +46,7 @@ public class Deputado {
         return siglaUf;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
@@ -58,7 +58,7 @@ public class Deputado {
         return siglaPartido;
     }
 
-    public URI getUrlFoto() {
+    public URL getUrlFoto() {
         return urlFoto;
     }
 
@@ -77,5 +77,23 @@ public class Deputado {
                     .append(" ");
         }
         return nomeFormatado.substring(0, nomeFormatado.length()-1);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Deputado deputado = (Deputado) o;
+        return id == deputado.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public int compareTo(Deputado o) {
+        return Integer.compare(this.id, o.id);
     }
 }

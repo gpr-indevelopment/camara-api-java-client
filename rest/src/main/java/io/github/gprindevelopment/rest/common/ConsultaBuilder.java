@@ -9,6 +9,14 @@ public abstract class ConsultaBuilder<T extends ConsultaPaginada> {
 
     protected Map<String, String> parametros = new HashMap<>();
 
+    protected void adicionarParamMultiValores(String param, int... valores) {
+        StringBuilder sb = new StringBuilder();
+        for (int valor : valores) {
+            sb.append(valor).append(",");
+        }
+        parametros.put(param, sb.substring(0, sb.length()-1));
+    }
+
     public ConsultaBuilder<T> itens(Integer itens) {
         parametros.put("itens", itens.toString());
         return this;
