@@ -5,7 +5,7 @@ import java.util.Objects;
 
 public class Proposicao implements Comparable<Proposicao> {
 
-    private final int id;
+    private final long id;
 
     private URI uri;
 
@@ -19,14 +19,14 @@ public class Proposicao implements Comparable<Proposicao> {
 
     private String ementa;
 
-    public Proposicao(int id) {
+    public Proposicao(long id) {
         if (id <= 0) {
             throw new IllegalArgumentException("Proposições devem ter ID maior que 0");
         }
         this.id = id;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -93,6 +93,6 @@ public class Proposicao implements Comparable<Proposicao> {
 
     @Override
     public int compareTo(Proposicao o) {
-        return Integer.compare(this.id, o.id);
+        return Long.compare(this.id, o.id);
     }
 }
