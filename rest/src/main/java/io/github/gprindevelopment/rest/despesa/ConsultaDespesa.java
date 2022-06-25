@@ -1,11 +1,11 @@
 package io.github.gprindevelopment.rest.despesa;
 
 import io.github.gprindevelopment.rest.common.ConsultaBuilder;
-import io.github.gprindevelopment.rest.common.ConsultaPaginada;
+import io.github.gprindevelopment.rest.common.Consulta;
 
 import java.util.Map;
 
-public class ConsultaDespesa extends ConsultaPaginada {
+public class ConsultaDespesa extends Consulta {
 
     private final int idDeputado;
 

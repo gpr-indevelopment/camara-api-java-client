@@ -33,7 +33,7 @@ public abstract class ConsultaBuilder<T extends ConsultaBuilder<T>> {
         return getThis();
     }
 
-    public abstract ConsultaPaginada build();
+    public abstract Consulta build();
 
     protected abstract T getThis();
 }

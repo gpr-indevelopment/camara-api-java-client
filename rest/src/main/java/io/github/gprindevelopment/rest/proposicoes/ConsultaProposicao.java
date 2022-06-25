@@ -1,11 +1,11 @@
 package io.github.gprindevelopment.rest.proposicoes;
 
 import io.github.gprindevelopment.rest.common.ConsultaBuilder;
-import io.github.gprindevelopment.rest.common.ConsultaPaginada;
+import io.github.gprindevelopment.rest.common.Consulta;
 
 import java.util.Map;
 
-public class ConsultaProposicao extends ConsultaPaginada {
+public class ConsultaProposicao extends Consulta {
 
     public ConsultaProposicao(Map<String, String> parametros) {
         super(parametros);

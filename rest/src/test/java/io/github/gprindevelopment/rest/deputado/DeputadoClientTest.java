@@ -6,6 +6,7 @@ import io.github.gprindevelopment.core.common.Genero;
 import io.github.gprindevelopment.core.common.Ordem;
 import io.github.gprindevelopment.core.common.Pagina;
 import io.github.gprindevelopment.core.exception.CamaraClientStatusException;
+import io.github.gprindevelopment.core.exception.RecursoNaoExisteException;
 import io.github.gprindevelopment.core.exception.RespostaNaoEsperadaException;
 import org.junit.jupiter.api.Test;
 
@@ -38,7 +39,7 @@ public class DeputadoClientTest {
     }
 
     @Test
-    public void consulta_paginada_de_deputados_retorna_uma_pagina_de_deputados() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException {
+    public void consulta_paginada_de_deputados_retorna_uma_pagina_de_deputados() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException, RecursoNaoExisteException {
         int itens = 10;
         int paginaAtual = 1;
         ConsultaDeputado consulta = new ConsultaDeputado.Builder()
@@ -54,7 +55,7 @@ public class DeputadoClientTest {
     }
 
     @Test
-    public void consulta_paginada_sem_parametros_usa_default_da_camara() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException {
+    public void consulta_paginada_sem_parametros_usa_default_da_camara() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException, RecursoNaoExisteException {
         Pagina<Deputado> pagina = client.consultar(new ConsultaDeputado.Builder().build());
         assertFalse(pagina.isEmpty());
         assertFalse(pagina.temProxima());
@@ -62,7 +63,7 @@ public class DeputadoClientTest {
     }
 
     @Test
-    public void consulta_paginada_por_nome_retorna_deputados_corretos() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException {
+    public void consulta_paginada_por_nome_retorna_deputados_corretos() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException, RecursoNaoExisteException {
         String nome = "Freixo";
         ConsultaDeputado consulta = new ConsultaDeputado.Builder()
                 .nome(nome)
@@ -84,7 +85,7 @@ public class DeputadoClientTest {
     }
 
     @Test
-    public void consulta_paginada_por_id_legislatura_retorna_deputados_corretos() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException {
+    public void consulta_paginada_por_id_legislatura_retorna_deputados_corretos() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException, RecursoNaoExisteException {
         int itens = 20;
         int paginaAtual = 1;
         int[] legislaturasEsperadas = new int[]{56,55};
@@ -105,7 +106,7 @@ public class DeputadoClientTest {
     }
 
     @Test
-    public void consulta_paginada_por_uf_retorna_deputados_do_estado() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException {
+    public void consulta_paginada_por_uf_retorna_deputados_do_estado() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException, RecursoNaoExisteException {
         int itens = 20;
         int paginaAtual = 1;
         Estado estadoConsulta = Estado.RJ;
@@ -122,7 +123,7 @@ public class DeputadoClientTest {
     }
 
     @Test
-    public void consulta_paginada_por_multiplos_ufs_retorna_deputados_dos_estados() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException {
+    public void consulta_paginada_por_multiplos_ufs_retorna_deputados_dos_estados() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException, RecursoNaoExisteException {
         int itens = 20;
         int paginaAtual = 1;
         Estado[] estadosEsperados = new Estado[]{Estado.RJ, Estado.SP};
@@ -143,7 +144,7 @@ public class DeputadoClientTest {
     }
 
     @Test
-    public void consulta_paginada_por_genero_retorna_deputados_do_genero() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException {
+    public void consulta_paginada_por_genero_retorna_deputados_do_genero() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException, RecursoNaoExisteException {
         int itens = 20;
         int paginaAtual = 1;
         Genero generoEsperado = Genero.FEM;

@@ -115,8 +115,8 @@ public class ComponenteClientTest {
     @Test
     public void consulta_com_paginacao_precisa_de_uma_consulta_e_url_validos() {
         assertThrows(NullPointerException.class, () -> client.consultarComPaginacao(null, "a", String.class));
-        assertThrows(IllegalArgumentException.class, () -> client.consultarComPaginacao(new ConsultaPaginada.Builder().build(), "", String.class));
-        assertThrows(IllegalArgumentException.class, () -> client.consultarComPaginacao(new ConsultaPaginada.Builder().build(), " ", String.class));
-        assertThrows(IllegalArgumentException.class, () -> client.consultarComPaginacao(new ConsultaPaginada.Builder().build(), "aaa", String.class));
+        assertThrows(IllegalArgumentException.class, () -> client.consultarComPaginacao(new Consulta.Builder().build(), "", String.class));
+        assertThrows(IllegalArgumentException.class, () -> client.consultarComPaginacao(new Consulta.Builder().build(), " ", String.class));
+        assertThrows(IllegalArgumentException.class, () -> client.consultarComPaginacao(new Consulta.Builder().build(), "aaa", String.class));
     }
 }

@@ -4,8 +4,9 @@ import io.github.gprindevelopment.core.Legislatura;
 import io.github.gprindevelopment.core.common.Ordem;
 import io.github.gprindevelopment.core.common.Pagina;
 import io.github.gprindevelopment.core.exception.CamaraClientStatusException;
+import io.github.gprindevelopment.core.exception.RecursoNaoExisteException;
 import io.github.gprindevelopment.core.exception.RespostaNaoEsperadaException;
-import io.github.gprindevelopment.rest.common.ConsultaPaginada;
+import io.github.gprindevelopment.rest.common.Consulta;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -23,16 +24,16 @@ public class LegislaturaClientTest {
     private final LegislaturaClient client = new LegislaturaClient();
 
     @Test
-    public void consultar_legislatura_corrente_retorna_56() throws IOException, CamaraClientStatusException, RespostaNaoEsperadaException, URISyntaxException {
+    public void consultar_legislatura_corrente_retorna_56() throws IOException, CamaraClientStatusException, RespostaNaoEsperadaException, URISyntaxException, RecursoNaoExisteException {
         Legislatura legislatura = client.consultarLegislaturaAtual();
         assertEquals(legislatura, construirLegislaturaAtual());
     }
 
     @Test
-    public void consulta_paginada_e_ordenada_de_legislaturas() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException, URISyntaxException {
+    public void consulta_paginada_e_ordenada_de_legislaturas() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException, URISyntaxException, RecursoNaoExisteException {
         int itens = 10;
         int paginaAtual = 1;
-        ConsultaPaginada consulta = new ConsultaPaginada.Builder()
+        Consulta consulta = new Consulta.Builder()
                 .ordenarPor("id", Ordem.DESC)
                 .itens(itens)
                 .pagina(paginaAtual)
@@ -52,8 +53,8 @@ public class LegislaturaClientTest {
     }
 
     @Test
-    public void consulta_sem_parametros_assume_default_da_camara() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException, URISyntaxException {
-        ConsultaPaginada consulta = new ConsultaPaginada.Builder().build();
+    public void consulta_sem_parametros_assume_default_da_camara() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException, URISyntaxException, RecursoNaoExisteException {
+        Consulta consulta = new Consulta.Builder().build();
         Pagina<Legislatura> pagina = client.consultar(consulta);
         assertEquals(15, pagina.size());
         assertEquals(ID_LEGISLATURA_CORRENTE, pagina.getTotal());
@@ -63,9 +64,9 @@ public class LegislaturaClientTest {
     }
 
     @Test
-    public void consulta_com_pagina_fora_do_limite_retorna_vazia() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException {
+    public void consulta_com_pagina_fora_do_limite_retorna_vazia() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException, RecursoNaoExisteException {
         int paginaAtual = 150;
-        ConsultaPaginada consulta = new ConsultaPaginada.Builder()
+        Consulta consulta = new Consulta.Builder()
                 .ordenarPor("id", Ordem.DESC)
                 .itens(10)
                 .pagina(paginaAtual)

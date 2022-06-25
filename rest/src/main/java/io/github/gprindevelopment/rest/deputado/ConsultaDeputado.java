@@ -3,11 +3,11 @@ package io.github.gprindevelopment.rest.deputado;
 import io.github.gprindevelopment.core.common.Estado;
 import io.github.gprindevelopment.core.common.Genero;
 import io.github.gprindevelopment.rest.common.ConsultaBuilder;
-import io.github.gprindevelopment.rest.common.ConsultaPaginada;
+import io.github.gprindevelopment.rest.common.Consulta;
 
 import java.util.Map;
 
-public class ConsultaDeputado extends ConsultaPaginada {
+public class ConsultaDeputado extends Consulta {
 
     protected ConsultaDeputado(Map<String, String> parametros) {
         super(parametros);

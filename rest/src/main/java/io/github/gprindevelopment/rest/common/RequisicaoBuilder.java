@@ -7,7 +7,7 @@ import java.util.Objects;
 
 public class RequisicaoBuilder {
 
-    private ConsultaPaginada consulta;
+    private Consulta consulta;
 
     private String[] segmentosPath;
 
@@ -22,7 +22,7 @@ public class RequisicaoBuilder {
         return this;
     }
 
-    public RequisicaoBuilder consulta(ConsultaPaginada consulta) {
+    public RequisicaoBuilder consulta(Consulta consulta) {
         this.consulta = consulta;
         return this;
     }

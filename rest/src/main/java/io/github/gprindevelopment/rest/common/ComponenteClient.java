@@ -4,6 +4,7 @@ import com.google.gson.reflect.TypeToken;
 import io.github.gprindevelopment.core.common.ConstantesCamara;
 import io.github.gprindevelopment.core.common.Pagina;
 import io.github.gprindevelopment.core.exception.CamaraClientStatusException;
+import io.github.gprindevelopment.core.exception.RecursoNaoExisteException;
 import io.github.gprindevelopment.core.exception.RespostaNaoEsperadaException;
 import okhttp3.*;
 
@@ -67,21 +68,37 @@ public class ComponenteClient {
         return executarChamada(chamada, tipoEsperado);
     }
 
-    protected <T> Pagina<T> consultarComPaginacao(ConsultaPaginada consulta, String urlBase, Type tipoEsperado, String... segmentosPath) throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException {
-        Objects.requireNonNull(consulta, "O objeto de consulta não pode ser null. Favor utilizar um objeto vazio se desejar uma consulta sem parâmetros.");
-        Request requisicao = new RequisicaoBuilder(urlBase)
-                .consulta(consulta)
-                .segmentosPath(segmentosPath)
-                .build();
-        Call chamada = client.newCall(requisicao);
-        RespostaCamara<List<T>> resposta = executarChamada(chamada, TypeToken.getParameterized(List.class, tipoEsperado).getType());
+    protected <T> List<T> consultarSemPaginacao(Consulta consulta, String urlBase, Type tipoEsperado, String... segmentosPath) throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException, RecursoNaoExisteException {
+        RespostaCamara<List<T>> resposta = executarConsulta(consulta, urlBase, tipoEsperado, segmentosPath);
+        return resposta.getDados();
+    }
 
+    protected <T> Pagina<T> consultarComPaginacao(Consulta consulta, String urlBase, Type tipoEsperado, String... segmentosPath) throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException, RecursoNaoExisteException {
+        RespostaCamara<List<T>> resposta = executarConsulta(consulta, urlBase, tipoEsperado, segmentosPath);
         return new Pagina<>(resposta.getDados(),
                 extrairCabecalhoTotalItens(resposta),
                 extrairPaginaDaConsulta(consulta));
     }
 
-    private int extrairPaginaDaConsulta(ConsultaPaginada consulta) {
+    private <T> RespostaCamara<List<T>> executarConsulta(Consulta consulta, String urlBase, Type tipoEsperado, String... segmentosPath) throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException, RecursoNaoExisteException {
+        Request requisicao = prepararConsulta(consulta, urlBase, segmentosPath);
+        Call chamada = client.newCall(requisicao);
+        RespostaCamara<List<T>> resposta = executarChamada(chamada, TypeToken.getParameterized(List.class, tipoEsperado).getType());
+        if (resposta.getStatusCode() == 404) {
+            throw new RecursoNaoExisteException("O recurso solicitado não existe: " + requisicao.url());
+        }
+        return resposta;
+    }
+
+    private Request prepararConsulta(Consulta consulta, String urlBase, String... segmentosPath) {
+        Objects.requireNonNull(consulta, "O objeto de consulta não pode ser null. Favor utilizar um objeto vazio se desejar uma consulta sem parâmetros.");
+        return new RequisicaoBuilder(urlBase)
+                .consulta(consulta)
+                .segmentosPath(segmentosPath)
+                .build();
+    }
+
+    private int extrairPaginaDaConsulta(Consulta consulta) {
         String paginaString = consulta.getParametros().get("pagina");
         if (paginaString == null || paginaString.isBlank()) {
             paginaString = "1";

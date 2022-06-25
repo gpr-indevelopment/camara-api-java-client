@@ -4,6 +4,7 @@ import io.github.gprindevelopment.core.Despesa;
 import io.github.gprindevelopment.core.Legislatura;
 import io.github.gprindevelopment.core.common.Pagina;
 import io.github.gprindevelopment.core.exception.CamaraClientStatusException;
+import io.github.gprindevelopment.core.exception.RecursoNaoExisteException;
 import io.github.gprindevelopment.core.exception.RespostaNaoEsperadaException;
 import io.github.gprindevelopment.rest.legislatura.LegislaturaClient;
 import org.junit.jupiter.api.Test;
@@ -22,7 +23,7 @@ public class DespesaClientTest {
     private final DespesaClient client = new DespesaClient();
 
     @Test
-    public void consulta_por_despesas_de_deputado_na_legislatura_retorna_despesas_paginado() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException {
+    public void consulta_por_despesas_de_deputado_na_legislatura_retorna_despesas_paginado() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException, RecursoNaoExisteException {
         int legislatura = 56;
         int idDeputado = 76874;
         int itens = 10;
@@ -42,7 +43,7 @@ public class DespesaClientTest {
     }
 
     @Test
-    public void consulta_por_despesa_com_varias_legislaturas_retorna_despesas_das_legislaturas() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException {
+    public void consulta_por_despesa_com_varias_legislaturas_retorna_despesas_das_legislaturas() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException, RecursoNaoExisteException {
         LegislaturaClient legislaturaClient = new LegislaturaClient();
         Optional<Legislatura> leg55Opt = legislaturaClient.consultarLegislaturaPorId(55);
         Optional<Legislatura> leg56Opt = legislaturaClient.consultarLegislaturaPorId(56);
@@ -69,7 +70,7 @@ public class DespesaClientTest {
     }
 
     @Test
-    public void consultar_despesas_com_ano_e_mes_retorna_datas_corretas() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException {
+    public void consultar_despesas_com_ano_e_mes_retorna_datas_corretas() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException, RecursoNaoExisteException {
         int idDeputado = 160976;
         int itens = 50;
         int paginaAtual = 1;
@@ -92,5 +93,10 @@ public class DespesaClientTest {
             assertNotEquals(3, despesa.getMes());
             assertNotEquals(0, despesa.getValorDocumento());
         });
+    }
+
+    @Test
+    public void buscar_despesa_de_deputado_que_nao_existe_dispara_erro() {
+        assertThrows(RecursoNaoExisteException.class, () -> client.consultar(new ConsultaDespesa.Builder(0).build()));
     }
 }

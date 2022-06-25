@@ -2,11 +2,11 @@ package io.github.gprindevelopment.rest.common;
 
 import java.util.Map;
 
-public class ConsultaPaginada {
+public class Consulta {
 
     private final Map<String, String> parametros;
 
-    protected ConsultaPaginada(Map<String, String> parametros) {
+    protected Consulta(Map<String, String> parametros) {
         this.parametros = parametros;
     }
 
@@ -14,11 +14,11 @@ public class ConsultaPaginada {
         return parametros;
     }
 
-    public static class Builder extends ConsultaBuilder<Builder> {
+    public static class Builder extends ConsultaBuilder<Consulta.Builder> {
 
         @Override
-        public ConsultaPaginada build() {
-            return new ConsultaPaginada(parametros);
+        public Consulta build() {
+            return new Consulta(parametros);
         }
 
         @Override
