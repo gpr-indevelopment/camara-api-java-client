@@ -15,7 +15,7 @@ public class Legislatura {
     private final LocalDate dataFim;
 
     public Legislatura(int id, URI uri, LocalDate dataInicio, LocalDate dataFim) {
-        if (id == 0) {
+        if (id <= 0) {
             throw new IllegalArgumentException("O ID de uma Legislaturas não pode ser 0");
         }
         this.id = id;

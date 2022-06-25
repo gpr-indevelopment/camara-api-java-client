@@ -13,7 +13,7 @@ public class ConsultaDeputado extends ConsultaPaginada {
         super(parametros);
     }
 
-    public static class Builder extends ConsultaBuilder<ConsultaDeputado> {
+    public static class Builder extends ConsultaBuilder<Builder> {
 
         public Builder nome(String nome) {
             parametros.put("nome", nome);
@@ -42,6 +42,11 @@ public class ConsultaDeputado extends ConsultaPaginada {
         @Override
         public ConsultaDeputado build() {
             return new ConsultaDeputado(parametros);
+        }
+
+        @Override
+        protected Builder getThis() {
+            return this;
         }
     }
 }

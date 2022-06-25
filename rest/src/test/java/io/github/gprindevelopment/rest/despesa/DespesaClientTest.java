@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.IntStream;
@@ -35,9 +36,8 @@ public class DespesaClientTest {
         assertEquals(itens, pagina.size());
         assertEquals(paginaAtual, pagina.getPaginaAtual());
         pagina.forEach(despesa -> {
-            assertNotNull(despesa.getNumDocumento());
+            assertNotEquals(0, despesa.getCodDocumento());
             assertFalse(despesa.getNumDocumento().isBlank());
-            assertTrue(despesa.getCodDocumento() != 0L);
         });
     }
 
@@ -63,8 +63,8 @@ public class DespesaClientTest {
         despesas.forEach(despesa -> {
             LocalDate limiteInferior = leg55Opt.get().getDataInicio();
             LocalDate limiteSuperior = leg56Opt.get().getDataFim();
-            assertTrue(despesa.getDataDocumento().isAfter(limiteInferior)
-                    && despesa.getDataDocumento().isBefore(limiteSuperior));
+            assertTrue(despesa.getDataDocumento().isAfter(YearMonth.from(limiteInferior))
+                    && despesa.getDataDocumento().isBefore(YearMonth.from(limiteSuperior)));
         });
     }
 
@@ -84,15 +84,13 @@ public class DespesaClientTest {
         Pagina<Despesa> despesas = client.consultar(consulta);
         assertEquals(paginaAtual, despesas.getPaginaAtual());
         despesas.forEach(despesa ->  {
-            // Existem documentos na base da camara que não tem data. Esses serão ignorados.
-            if (despesa.getDataDocumento() != null) {
-                IntStream anoStream = Arrays.stream(anos);
-                IntStream mesStream = Arrays.stream(meses);
-                assertTrue(anoStream.anyMatch(ano -> ano == despesa.getDataDocumento().getYear()));
-                assertTrue(mesStream.anyMatch(mes -> mes == despesa.getDataDocumento().getMonthValue()));
-                assertNotEquals(2022, despesa.getDataDocumento().getYear());
-                assertNotEquals(3, despesa.getDataDocumento().getMonthValue());
-            }
+            IntStream anoStream = Arrays.stream(anos);
+            IntStream mesStream = Arrays.stream(meses);
+            assertTrue(anoStream.anyMatch(ano -> ano == despesa.getAno()));
+            assertTrue(mesStream.anyMatch(mes -> mes == despesa.getMes()));
+            assertNotEquals(2022, despesa.getAno());
+            assertNotEquals(3, despesa.getMes());
+            assertNotEquals(0, despesa.getValorDocumento());
         });
     }
 }

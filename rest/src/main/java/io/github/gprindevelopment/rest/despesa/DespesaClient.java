@@ -13,7 +13,7 @@ import java.io.IOException;
 public class DespesaClient extends ComponenteClient {
 
     public Pagina<Despesa> consultar(ConsultaDespesa consulta) throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException {
-        String url = String.format(ConstantesCamara.DESPESAS_API_FORMATO_URL, consulta.getIdDeputado());
-        return consultarComPaginacao(consulta, url, Despesa.class);
+        String[] segmentosPath = new String[]{String.valueOf(consulta.getIdDeputado()), "despesas"};
+        return consultarComPaginacao(consulta, ConstantesCamara.DEPUTADO_API_URL, Despesa.class, segmentosPath);
     }
 }

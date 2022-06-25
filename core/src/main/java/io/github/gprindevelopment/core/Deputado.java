@@ -9,29 +9,25 @@ public class Deputado implements Comparable<Deputado> {
 
     private final int id;
 
-    private final URL uri;
+    private URL uri;
 
-    private final String siglaPartido;
+    private String siglaPartido;
 
-    private final URL urlFoto;
+    private URL urlFoto;
 
-    private final String email;
+    private String email;
 
-    private final String nome;
+    private String nome;
 
-    private final int idLegislatura;
+    private int idLegislatura;
 
-    private final Estado siglaUf;
+    private Estado siglaUf;
 
-    public Deputado(int id, URL uri, String siglaPartido, URL urlFoto, String email, String nome, int idLegislatura, Estado siglaUf) {
+    public Deputado(int id) {
+        if (id <= 0) {
+            throw new IllegalArgumentException("Deputados tem que ter ID maior que zero");
+        }
         this.id = id;
-        this.uri = uri;
-        this.siglaPartido = siglaPartido;
-        this.urlFoto = urlFoto;
-        this.email = email;
-        this.nome = nome;
-        this.idLegislatura = idLegislatura;
-        this.siglaUf = siglaUf;
     }
 
     public int getIdLegislatura() {
@@ -64,6 +60,34 @@ public class Deputado implements Comparable<Deputado> {
 
     public String getEmail() {
         return email;
+    }
+
+    public void setUri(URL uri) {
+        this.uri = uri;
+    }
+
+    public void setSiglaPartido(String siglaPartido) {
+        this.siglaPartido = siglaPartido;
+    }
+
+    public void setUrlFoto(URL urlFoto) {
+        this.urlFoto = urlFoto;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setIdLegislatura(int idLegislatura) {
+        this.idLegislatura = idLegislatura;
+    }
+
+    public void setSiglaUf(Estado siglaUf) {
+        this.siglaUf = siglaUf;
     }
 
     public String getNomeFormatado() {

@@ -35,6 +35,11 @@ public class LegislaturaTest {
     @Test
     public void legislatura_precisa_de_id_e_datas() {
         assertThrows(IllegalArgumentException.class, () -> new Legislatura(
+                -1,
+                new URI(ConstantesCamara.BASE_URL),
+                LocalDate.of(2020, 1, 2),
+                LocalDate.of(2021, 1, 2)));
+        assertThrows(IllegalArgumentException.class, () -> new Legislatura(
                 0,
                 new URI(ConstantesCamara.BASE_URL),
                 LocalDate.of(2020, 1, 2),

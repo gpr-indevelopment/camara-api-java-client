@@ -3,7 +3,6 @@ package io.github.gprindevelopment.rest.despesa;
 import io.github.gprindevelopment.rest.common.ConsultaBuilder;
 import io.github.gprindevelopment.rest.common.ConsultaPaginada;
 
-import java.time.YearMonth;
 import java.util.Map;
 
 public class ConsultaDespesa extends ConsultaPaginada {
@@ -19,7 +18,7 @@ public class ConsultaDespesa extends ConsultaPaginada {
         return idDeputado;
     }
 
-    public static class Builder extends ConsultaBuilder<ConsultaDespesa> {
+    public static class Builder extends ConsultaBuilder<Builder> {
 
         private final int idDeputado;
 
@@ -46,6 +45,11 @@ public class ConsultaDespesa extends ConsultaPaginada {
         @Override
         public ConsultaDespesa build() {
             return new ConsultaDespesa(parametros, idDeputado);
+        }
+
+        @Override
+        protected Builder getThis() {
+            return this;
         }
     }
 }
