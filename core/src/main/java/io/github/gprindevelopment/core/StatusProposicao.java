@@ -1,8 +1,10 @@
 package io.github.gprindevelopment.core;
 
+import java.time.LocalDateTime;
+
 public class StatusProposicao {
 
-    private String dataHora;
+    private LocalDateTime dataHora;
 
     private int sequencia;
 
@@ -22,11 +24,11 @@ public class StatusProposicao {
 
     private String ambito;
 
-    public String getDataHora() {
+    public LocalDateTime getDataHora() {
         return dataHora;
     }
 
-    public void setDataHora(String dataHora) {
+    public void setDataHora(LocalDateTime dataHora) {
         this.dataHora = dataHora;
     }
 

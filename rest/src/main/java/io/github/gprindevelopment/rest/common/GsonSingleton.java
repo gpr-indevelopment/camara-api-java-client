@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import io.github.gprindevelopment.core.Deputado;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class GsonSingleton {
 
@@ -15,6 +16,7 @@ public class GsonSingleton {
             GsonBuilder builder = new GsonBuilder();
             builder.registerTypeAdapter(LocalDate.class, new LocalDateDeserializer());
             builder.registerTypeAdapter(Deputado.class, new DeputadoDeserializer());
+            builder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
             instancia = builder.create();
         }
         return instancia;

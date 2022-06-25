@@ -47,9 +47,13 @@ public class ProposicoesClientTest {
         DetalhesProposicao detalhes = detalhesOpt.get();
         assertEquals(idProposicao, detalhes.getId());
         assertNotNull(detalhes.getUrlInteiroTeor());
-        assertNotNull(detalhes.getDataApresentacao());
         assertNotNull(detalhes.getStatusProposicao());
         assertNotNull(detalhes.getStatusProposicao().getDataHora());
+        assertEquals(2019, detalhes.getDataApresentacao().getYear());
+        assertEquals(2, detalhes.getDataApresentacao().getMonthValue());
+        assertEquals(5, detalhes.getDataApresentacao().getDayOfMonth());
+        assertEquals(15, detalhes.getDataApresentacao().getHour());
+        assertEquals(42, detalhes.getDataApresentacao().getMinute());
     }
 
     @Test

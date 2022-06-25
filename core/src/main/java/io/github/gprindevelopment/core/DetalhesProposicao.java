@@ -1,6 +1,7 @@
 package io.github.gprindevelopment.core;
 
 import java.net.URL;
+import java.time.LocalDateTime;
 
 public class DetalhesProposicao {
 
@@ -16,7 +17,7 @@ public class DetalhesProposicao {
 
     private String ementa;
 
-    private String dataApresentacao;
+    private LocalDateTime dataApresentacao;
 
     private StatusProposicao statusProposicao;
 
@@ -54,7 +55,7 @@ public class DetalhesProposicao {
         return ementa;
     }
 
-    public String getDataApresentacao() {
+    public LocalDateTime getDataApresentacao() {
         return dataApresentacao;
     }
 
@@ -94,7 +95,7 @@ public class DetalhesProposicao {
         this.ementa = ementa;
     }
 
-    public void setDataApresentacao(String dataApresentacao) {
+    public void setDataApresentacao(LocalDateTime dataApresentacao) {
         this.dataApresentacao = dataApresentacao;
     }
 
