@@ -10,8 +10,8 @@ import io.github.gprindevelopment.core.exception.CamaraClientStatusException;
 import io.github.gprindevelopment.core.exception.RecursoNaoExisteException;
 import io.github.gprindevelopment.core.exception.RespostaNaoEsperadaException;
 import io.github.gprindevelopment.rest.common.ComponenteClient;
+import io.github.gprindevelopment.rest.common.OkHttpClientSingleton;
 import io.github.gprindevelopment.rest.common.RespostaCamara;
-import okhttp3.OkHttpClient;
 
 import java.io.IOException;
 import java.util.List;
@@ -23,7 +23,11 @@ public class VotacaoClient extends ComponenteClient {
 
     public VotacaoClient() {
         // Workaround necessário já que a API de votações é lenta. Uso de cache é recomendado.
-        super(new OkHttpClient.Builder().readTimeout(60, TimeUnit.SECONDS).build());
+        super(OkHttpClientSingleton
+                .getInstancia()
+                .newBuilder()
+                .readTimeout(1, TimeUnit.MINUTES)
+                .build());
     }
 
     public Pagina<Votacao> consultar(ConsultaVotacao consulta) throws RespostaNaoEsperadaException, CamaraClientStatusException, RecursoNaoExisteException, IOException {

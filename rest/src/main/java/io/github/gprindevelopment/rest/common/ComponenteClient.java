@@ -22,7 +22,7 @@ public class ComponenteClient {
     }
 
     public ComponenteClient() {
-        this.client = new OkHttpClient();
+        this.client = OkHttpClientSingleton.getInstancia();
     }
 
     protected <T> RespostaCamara<T> executarChamada(Call chamada, Type tipoResposta) throws IOException, CamaraClientStatusException, RespostaNaoEsperadaException {
