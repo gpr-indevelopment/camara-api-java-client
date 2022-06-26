@@ -15,4 +15,6 @@ public class ConstantesCamara {
     public static final String DEPUTADO_API_URL = BASE_URL + "/deputados";
 
     public static final String PROPOSICAO_API_URL = BASE_URL + "/proposicoes";
+
+    public static final String VOTACAO_API_URL = BASE_URL + "/votacoes";
 }

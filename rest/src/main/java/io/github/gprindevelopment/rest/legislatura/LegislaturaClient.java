@@ -27,7 +27,7 @@ public class LegislaturaClient extends ComponenteClient {
     }
 
     public Optional<Legislatura> consultarLegislaturaPorId(int id) throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException {
-        RespostaCamara<Legislatura> resposta = consultarPorId(id, LEGISLATURA_API_URL, Legislatura.class);
+        RespostaCamara<Legislatura> resposta = consultarPorId(String.valueOf(id), LEGISLATURA_API_URL, Legislatura.class);
         return Optional.ofNullable(resposta.getDados());
     }
 

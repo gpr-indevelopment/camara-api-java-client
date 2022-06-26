@@ -15,7 +15,7 @@ import java.util.Optional;
 public class DeputadoClient extends ComponenteClient {
 
     public Optional<Deputado> consultarDeputadoPorId(int id) throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException {
-        RespostaCamara<Deputado> resposta = consultarPorId(id, ConstantesCamara.DEPUTADO_API_URL, Deputado.class);
+        RespostaCamara<Deputado> resposta = consultarPorId(String.valueOf(id), ConstantesCamara.DEPUTADO_API_URL, Deputado.class);
         return Optional.ofNullable(resposta.getDados());
     }
 

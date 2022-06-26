@@ -105,11 +105,11 @@ public class ComponenteClientTest {
     }
 
     @Test
-    public void consultar_por_id_precisa_de_uma_string_path_valida() {
-        assertThrows(NullPointerException.class, () -> client.consultarPorId(9, null, String.class));
-        assertThrows(IllegalArgumentException.class, () -> client.consultarPorId(9, " ", String.class));
-        assertThrows(IllegalArgumentException.class, () -> client.consultarPorId(9, "", String.class));
-        assertThrows(IllegalArgumentException.class, () -> client.consultarPorId(9, "aaa", String.class));
+    public void consultar_por_id_precisa_de_uma_string_base_valida() {
+        assertThrows(NullPointerException.class, () -> client.consultarPorId(String.valueOf(9), null, String.class));
+        assertThrows(IllegalArgumentException.class, () -> client.consultarPorId(String.valueOf(9), " ", String.class));
+        assertThrows(IllegalArgumentException.class, () -> client.consultarPorId(String.valueOf(9), "", String.class));
+        assertThrows(IllegalArgumentException.class, () -> client.consultarPorId(String.valueOf(9), "aaa", String.class));
     }
 
     @Test

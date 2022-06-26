@@ -31,7 +31,7 @@ public class ProposicaoClient extends ComponenteClient {
     }
 
     public Optional<DetalhesProposicao> consultarDetalhes(long idProposicao) throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException {
-        RespostaCamara<DetalhesProposicao> resposta = consultarPorId(idProposicao, ConstantesCamara.PROPOSICAO_API_URL, DetalhesProposicao.class);
+        RespostaCamara<DetalhesProposicao> resposta = consultarPorId(String.valueOf(idProposicao), ConstantesCamara.PROPOSICAO_API_URL, DetalhesProposicao.class);
         return Optional.ofNullable(resposta.getDados());
     }
 

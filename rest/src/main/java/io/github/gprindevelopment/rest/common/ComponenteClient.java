@@ -62,8 +62,8 @@ public class ComponenteClient {
         return Integer.parseInt(valorCabecalho);
     }
 
-    protected <T> RespostaCamara<T> consultarPorId(long id, String urlBase, Type tipoEsperado) throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException {
-        Request requisicao = new RequisicaoBuilder(urlBase).segmentosPath(String.valueOf(id)).build();
+    protected <T> RespostaCamara<T> consultarPorId(String id, String urlBase, Type tipoEsperado) throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException {
+        Request requisicao = new RequisicaoBuilder(urlBase).segmentosPath(id).build();
         Call chamada = client.newCall(requisicao);
         return executarChamada(chamada, tipoEsperado);
     }
