@@ -106,4 +106,18 @@ public class VotacaoClientTest {
         String idVotacao = "1";
         assertThrows(RecursoNaoExisteException.class, () -> client.consultarOrientacoes(idVotacao));
     }
+
+    @Test
+    public void apis_de_votacao_devem_receber_strings_preenchidas_como_id() {
+        assertThrows(IllegalArgumentException.class, () -> client.consultarVotos(""));
+        assertThrows(IllegalArgumentException.class, () -> client.consultarVotos(" "));
+        assertThrows(IllegalArgumentException.class, () -> client.consultarOrientacoes(""));
+        assertThrows(IllegalArgumentException.class, () -> client.consultarOrientacoes(" "));
+        assertThrows(IllegalArgumentException.class, () -> client.consultarDetalhes(""));
+        assertThrows(IllegalArgumentException.class, () -> client.consultarDetalhes(" "));
+
+        assertThrows(NullPointerException.class, () -> client.consultarDetalhes(null));
+        assertThrows(NullPointerException.class, () -> client.consultarVotos(null));
+        assertThrows(NullPointerException.class, () -> client.consultarOrientacoes(null));
+    }
 }
