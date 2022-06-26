@@ -1,6 +1,7 @@
 package io.github.gprindevelopment.rest.votacoes;
 
 import io.github.gprindevelopment.core.DetalheVotacao;
+import io.github.gprindevelopment.core.OrientacaoVoto;
 import io.github.gprindevelopment.core.Votacao;
 import io.github.gprindevelopment.core.Voto;
 import io.github.gprindevelopment.core.common.ConstantesCamara;
@@ -39,5 +40,14 @@ public class VotacaoClient extends ComponenteClient {
                 ConstantesCamara.VOTACAO_API_URL,
                 Voto.class,
                 new String[]{idVotacao, "votos"});
+    }
+
+    public List<OrientacaoVoto> consultarOrientacoes(String idVotacao) throws RespostaNaoEsperadaException, CamaraClientStatusException, RecursoNaoExisteException, IOException {
+        return consultarSemPaginacao(
+                new ConsultaVotacao.Builder().build(),
+                ConstantesCamara.VOTACAO_API_URL,
+                OrientacaoVoto.class,
+                new String[]{idVotacao, "orientacoes"}
+        );
     }
 }

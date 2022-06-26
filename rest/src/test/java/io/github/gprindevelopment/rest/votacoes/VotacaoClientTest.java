@@ -1,6 +1,7 @@
 package io.github.gprindevelopment.rest.votacoes;
 
 import io.github.gprindevelopment.core.DetalheVotacao;
+import io.github.gprindevelopment.core.OrientacaoVoto;
 import io.github.gprindevelopment.core.Votacao;
 import io.github.gprindevelopment.core.Voto;
 import io.github.gprindevelopment.core.common.Pagina;
@@ -88,13 +89,21 @@ public class VotacaoClientTest {
     }
 
     @Test
-    public void consultar_orientacoes_de_votacao_retorna_lista_nao_paginada() {
+    public void consultar_orientacoes_de_votacao_retorna_lista_nao_paginada() throws RespostaNaoEsperadaException, CamaraClientStatusException, RecursoNaoExisteException, IOException {
         String idVotacao = "2293449-250";
-
+        List<OrientacaoVoto> orientacoes = client.consultarOrientacoes(idVotacao);
+        assertFalse(orientacoes.isEmpty());
+        orientacoes.forEach(orientacao -> {
+            assertNotNull(orientacao.getOrientacaoVoto());
+            assertNotNull(orientacao.getSiglaPartidoBloco());
+            assertTrue(orientacao.getCodPartidoBloco() >= 0);
+            assertNotNull(orientacao.getCodTipoLideranca());
+        });
     }
 
     @Test
     public void consultar_orientacoes_de_votacao_que_nao_existe_dispara_erro() {
-
+        String idVotacao = "1";
+        assertThrows(RecursoNaoExisteException.class, () -> client.consultarOrientacoes(idVotacao));
     }
 }
