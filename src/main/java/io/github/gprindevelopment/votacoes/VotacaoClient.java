@@ -1,0 +1,68 @@
+package io.github.gprindevelopment.votacoes;
+
+import io.github.gprindevelopment.http.Client;
+import io.github.gprindevelopment.http.OkHttpClientSingleton;
+import io.github.gprindevelopment.http.RespostaCamara;
+import io.github.gprindevelopment.dominio.DetalheVotacao;
+import io.github.gprindevelopment.dominio.OrientacaoVoto;
+import io.github.gprindevelopment.dominio.Votacao;
+import io.github.gprindevelopment.dominio.Voto;
+import io.github.gprindevelopment.http.ConstantesApiCamara;
+import io.github.gprindevelopment.http.Pagina;
+import io.github.gprindevelopment.exception.CamaraClientStatusException;
+import io.github.gprindevelopment.exception.RecursoNaoExisteException;
+import io.github.gprindevelopment.exception.RespostaNaoEsperadaException;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+
+public class VotacaoClient extends Client {
+
+    public VotacaoClient() {
+        // Workaround necessário já que a API de votações é lenta. Uso de cache é recomendado.
+        super(OkHttpClientSingleton
+                .getInstancia()
+                .newBuilder()
+                .readTimeout(1, TimeUnit.MINUTES)
+                .build());
+    }
+
+    public Pagina<Votacao> consultar(ConsultaVotacao consulta) throws RespostaNaoEsperadaException, CamaraClientStatusException, RecursoNaoExisteException, IOException {
+        return consultarComPaginacao(consulta, ConstantesApiCamara.VOTACAO_API_URL, Votacao.class);
+    }
+
+    public Optional<DetalheVotacao> consultarDetalhes(String idVotacao) throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException {
+        validarIdVotacao(idVotacao);
+        RespostaCamara<DetalheVotacao> resposta = consultarPorId(idVotacao, ConstantesApiCamara.VOTACAO_API_URL, DetalheVotacao.class);
+        return Optional.ofNullable(resposta.getDados());
+    }
+
+    public List<Voto> consultarVotos(String idVotacao) throws RespostaNaoEsperadaException, CamaraClientStatusException, RecursoNaoExisteException, IOException {
+        validarIdVotacao(idVotacao);
+        return consultarSemPaginacao(
+                new ConsultaVotacao.Builder().build(),
+                ConstantesApiCamara.VOTACAO_API_URL,
+                Voto.class,
+                new String[]{idVotacao, "votos"});
+    }
+
+    public List<OrientacaoVoto> consultarOrientacoes(String idVotacao) throws RespostaNaoEsperadaException, CamaraClientStatusException, RecursoNaoExisteException, IOException {
+        validarIdVotacao(idVotacao);
+        return consultarSemPaginacao(
+                new ConsultaVotacao.Builder().build(),
+                ConstantesApiCamara.VOTACAO_API_URL,
+                OrientacaoVoto.class,
+                new String[]{idVotacao, "orientacoes"}
+        );
+    }
+
+    private void validarIdVotacao(String idVotacao) {
+        Objects.requireNonNull(idVotacao, "O ID de votação não pode ser null.");
+        if (idVotacao.isBlank()) {
+            throw new IllegalArgumentException("O ID de votação não pode estar em branco para uma consulta.");
+        }
+    }
+}
