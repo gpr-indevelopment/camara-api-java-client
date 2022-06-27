@@ -3,6 +3,7 @@ package io.github.gprindevelopment.despesas;
 import io.github.gprindevelopment.http.Consulta;
 import io.github.gprindevelopment.http.ConsultaBuilder;
 
+import java.util.List;
 import java.util.Map;
 
 public class ConsultaDespesa extends Consulta {
@@ -32,7 +33,17 @@ public class ConsultaDespesa extends Consulta {
             return this;
         }
 
+        public Builder anos(List<Integer> anos) {
+            adicionarParamMultiValores("ano", anos);
+            return this;
+        }
+
         public Builder meses(int... meses) {
+            adicionarParamMultiValores("mes", meses);
+            return this;
+        }
+
+        public Builder meses(List<Integer> meses) {
             adicionarParamMultiValores("mes", meses);
             return this;
         }

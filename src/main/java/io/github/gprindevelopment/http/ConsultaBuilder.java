@@ -2,11 +2,20 @@ package io.github.gprindevelopment.http;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public abstract class ConsultaBuilder<T extends ConsultaBuilder<T>> {
 
     protected Map<String, String> parametros = new HashMap<>();
+
+    protected void adicionarParamMultiValores(String param, List<Integer> valores) {
+        long[] valoresLong = new long[valores.size()];
+        for (int i = 0; i < valores.size(); i++) {
+            valoresLong[i] = valores.get(i);
+        }
+        adicionarParamMultiValores(param, valoresLong);
+    }
 
     protected void adicionarParamMultiValores(String param, int... valores) {
         long[] valoresLong = Arrays.stream(valores).asLongStream().toArray();
