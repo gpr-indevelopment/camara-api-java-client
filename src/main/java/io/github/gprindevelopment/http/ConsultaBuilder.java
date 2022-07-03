@@ -1,20 +1,54 @@
 package io.github.gprindevelopment.http;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class ConsultaBuilder<T extends ConsultaBuilder<T>> {
 
-    protected Map<String, String> parametros = new HashMap<>();
+    private final Map<String, String> parametros = new HashMap<>();
+
+    private final ModoValidacao modoValidacao;
+
+    public ConsultaBuilder(ModoValidacao modoValidacao) {
+        this.modoValidacao = modoValidacao;
+    }
+
+    protected void adicionarParam(String chave, String valor) {
+        if (valor != null && !valor.isBlank()) {
+            parametros.put(chave, valor);
+        }
+        if (modoValidacao.equals(ModoValidacao.RIGOROSO)) {
+            String mensagem = String.format("O Builder está em modo rigoroso e o parametro %s é \"%s\"", chave, valor);
+            throw new IllegalArgumentException(mensagem);
+        }
+    }
+
+    protected Map<String, String> getParametros() {
+        return Collections.unmodifiableMap(parametros);
+    }
 
     protected void adicionarParamMultiValores(String param, List<Integer> valores) {
-        long[] valoresLong = new long[valores.size()];
-        for (int i = 0; i < valores.size(); i++) {
-            valoresLong[i] = valores.get(i);
+        if (valores != null) {
+            adicionarParamMultiValoresInterno(param, valores);
         }
-        adicionarParamMultiValores(param, valoresLong);
+        if (modoValidacao.equals(ModoValidacao.RIGOROSO)) {
+            throw new IllegalArgumentException("O Builder está em modo rigoroso e a lista de valores é null.");
+        }
+    }
+
+    private void adicionarParamMultiValoresInterno(String param, List<Integer> valores) {
+        List<Long> valoresLong = new ArrayList<>();
+        for (Integer valorInteger : valores) {
+            if (valorInteger == null) {
+                if (modoValidacao.equals(ModoValidacao.RIGOROSO)) {
+                    throw new IllegalArgumentException("O Builder está em modo rigoroso e um dos valores da entrada é null.");
+                }
+                return;
+            }
+            valoresLong.add(Long.valueOf(valorInteger));
+        }
+        if (!valoresLong.isEmpty()) {
+            adicionarParamMultiValores(param, valoresLong.stream().mapToLong(l -> l).toArray());
+        }
     }
 
     protected void adicionarParamMultiValores(String param, int... valores) {
@@ -23,26 +57,28 @@ public abstract class ConsultaBuilder<T extends ConsultaBuilder<T>> {
     }
 
     protected void adicionarParamMultiValores(String param, long... valores) {
-        StringBuilder sb = new StringBuilder();
-        for (long valor : valores) {
-            sb.append(valor).append(",");
+        if (valores.length > 0) {
+            StringBuilder sb = new StringBuilder();
+            for (long valor : valores) {
+                sb.append(valor).append(",");
+            }
+            adicionarParam(param, sb.substring(0, sb.length()-1));
         }
-        parametros.put(param, sb.substring(0, sb.length()-1));
     }
 
     public T itens(Integer itens) {
-        parametros.put("itens", itens.toString());
+        adicionarParam("itens", itens == null ? null : itens.toString());
         return getThis();
     }
 
     public T pagina(Integer pagina) {
-        parametros.put("pagina", pagina.toString());
+        adicionarParam("pagina", pagina == null ? null : pagina.toString());
         return getThis();
     }
 
     public T ordenarPor(String campo, Ordem ordem) {
-        parametros.put("ordenarPor", campo);
-        parametros.put("ordem", ordem.name());
+        adicionarParam("ordenarPor", campo);
+        adicionarParam("ordem", ordem == null ? null : ordem.name());
         return getThis();
     }
 

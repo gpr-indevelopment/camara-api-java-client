@@ -2,6 +2,7 @@ package io.github.gprindevelopment.proposicoes;
 
 import io.github.gprindevelopment.http.Consulta;
 import io.github.gprindevelopment.http.ConsultaBuilder;
+import io.github.gprindevelopment.http.ModoValidacao;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -27,21 +28,27 @@ public class ConsultaTramitacao extends Consulta {
         private final DateTimeFormatter formatoData = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         public Builder(long idProposicao) {
+            super(ModoValidacao.PERMISSIVO);
+            this.idProposicao = idProposicao;
+        }
+
+        public Builder(ModoValidacao modoValidacao, long idProposicao) {
+            super(modoValidacao);
             this.idProposicao = idProposicao;
         }
 
         public Builder dataInicio(LocalDate dataInicio) {
-            parametros.put("dataInicio", formatoData.format(dataInicio));
+            adicionarParam("dataInicio", formatoData.format(dataInicio));
             return this;
         }
         public Builder dataFim(LocalDate dataFim) {
-            parametros.put("dataFim", formatoData.format(dataFim));
+            adicionarParam("dataFim", formatoData.format(dataFim));
             return this;
         }
 
         @Override
         public ConsultaTramitacao build() {
-            return new ConsultaTramitacao(parametros, idProposicao);
+            return new ConsultaTramitacao(getParametros(), idProposicao);
         }
 
         @Override

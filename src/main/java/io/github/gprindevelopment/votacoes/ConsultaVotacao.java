@@ -2,6 +2,7 @@ package io.github.gprindevelopment.votacoes;
 
 import io.github.gprindevelopment.http.Consulta;
 import io.github.gprindevelopment.http.ConsultaBuilder;
+import io.github.gprindevelopment.http.ModoValidacao;
 
 import java.util.Map;
 
@@ -23,6 +24,14 @@ public class ConsultaVotacao extends Consulta {
 
     public static class Builder extends ConsultaBuilder<ConsultaVotacao.Builder> {
 
+        public Builder() {
+            super(ModoValidacao.PERMISSIVO);
+        }
+
+        public Builder(ModoValidacao modoValidacao) {
+            super(modoValidacao);
+        }
+
         public Builder proposicoes(long... idProposicoes) {
             adicionarParamMultiValores("idProposicao", idProposicoes);
             return this;
@@ -30,7 +39,7 @@ public class ConsultaVotacao extends Consulta {
 
         @Override
         public ConsultaVotacao build() {
-            return new ConsultaVotacao(parametros);
+            return new ConsultaVotacao(getParametros());
         }
 
         @Override

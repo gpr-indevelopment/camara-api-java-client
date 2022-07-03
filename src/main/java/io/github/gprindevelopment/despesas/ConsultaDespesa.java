@@ -2,6 +2,7 @@ package io.github.gprindevelopment.despesas;
 
 import io.github.gprindevelopment.http.Consulta;
 import io.github.gprindevelopment.http.ConsultaBuilder;
+import io.github.gprindevelopment.http.ModoValidacao;
 
 import java.util.List;
 import java.util.Map;
@@ -23,8 +24,13 @@ public class ConsultaDespesa extends Consulta {
 
         private final int idDeputado;
 
-
         public Builder(int idDeputado) {
+            super(ModoValidacao.PERMISSIVO);
+            this.idDeputado = idDeputado;
+        }
+
+        public Builder(ModoValidacao modoValidacao, int idDeputado) {
+            super(modoValidacao);
             this.idDeputado = idDeputado;
         }
 
@@ -55,7 +61,7 @@ public class ConsultaDespesa extends Consulta {
 
         @Override
         public ConsultaDespesa build() {
-            return new ConsultaDespesa(parametros, idDeputado);
+            return new ConsultaDespesa(getParametros(), idDeputado);
         }
 
         @Override

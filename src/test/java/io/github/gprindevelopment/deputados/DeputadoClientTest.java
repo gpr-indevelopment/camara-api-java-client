@@ -1,13 +1,13 @@
 package io.github.gprindevelopment.deputados;
 
+import io.github.gprindevelopment.dominio.Deputado;
 import io.github.gprindevelopment.dominio.Estado;
 import io.github.gprindevelopment.dominio.Genero;
-import io.github.gprindevelopment.http.Ordem;
-import io.github.gprindevelopment.http.Pagina;
-import io.github.gprindevelopment.dominio.Deputado;
 import io.github.gprindevelopment.exception.CamaraClientStatusException;
 import io.github.gprindevelopment.exception.RecursoNaoExisteException;
 import io.github.gprindevelopment.exception.RespostaNaoEsperadaException;
+import io.github.gprindevelopment.http.Ordem;
+import io.github.gprindevelopment.http.Pagina;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;

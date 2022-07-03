@@ -16,14 +16,22 @@ public class Consulta {
 
     public static class Builder extends ConsultaBuilder<Consulta.Builder> {
 
-        @Override
-        public Consulta build() {
-            return new Consulta(parametros);
+        public Builder() {
+            super(ModoValidacao.PERMISSIVO);
+        }
+
+        public Builder(ModoValidacao modoValidacao) {
+            super(modoValidacao);
         }
 
         @Override
         protected Builder getThis() {
             return this;
+        }
+
+        @Override
+        public Consulta build() {
+            return new Consulta(getParametros());
         }
     }
 }
