@@ -1,6 +1,6 @@
 package io.github.gprindevelopment.exception;
 
-public class CamaraClientStatusException extends Exception {
+public class CamaraClientStatusException extends RuntimeException {
 
     private final int statusCode;
 

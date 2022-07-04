@@ -1,13 +1,11 @@
 package io.github.gprindevelopment.votacoes;
 
-import io.github.gprindevelopment.http.Pagina;
 import io.github.gprindevelopment.dominio.DetalheVotacao;
 import io.github.gprindevelopment.dominio.OrientacaoVoto;
 import io.github.gprindevelopment.dominio.Votacao;
 import io.github.gprindevelopment.dominio.Voto;
-import io.github.gprindevelopment.exception.CamaraClientStatusException;
 import io.github.gprindevelopment.exception.RecursoNaoExisteException;
-import io.github.gprindevelopment.exception.RespostaNaoEsperadaException;
+import io.github.gprindevelopment.http.Pagina;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -21,7 +19,7 @@ public class VotacaoClientTest {
     private final VotacaoClient client = new VotacaoClient();
 
     @Test
-    public void consultar_votacao_por_id_de_proposicao_retorna_votacoes() throws RespostaNaoEsperadaException, CamaraClientStatusException, RecursoNaoExisteException, IOException {
+    public void consultar_votacao_por_id_de_proposicao_retorna_votacoes() throws IOException {
         long idProposicao = 2293449;
         int itens = 2;
         int paginaAtual = 1;
@@ -42,7 +40,7 @@ public class VotacaoClientTest {
     }
 
     @Test
-    public void consultar_votacoes_para_proposicao_que_nao_existe_retorna_vazio() throws RespostaNaoEsperadaException, CamaraClientStatusException, RecursoNaoExisteException, IOException {
+    public void consultar_votacoes_para_proposicao_que_nao_existe_retorna_vazio() throws IOException {
         long idProposicao = 1;
         ConsultaVotacao consulta = new ConsultaVotacao.Builder()
                 .proposicoes(idProposicao)
@@ -52,7 +50,7 @@ public class VotacaoClientTest {
     }
 
     @Test
-    public void consultar_detalhes_de_votacao_retorna_detalhes() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException {
+    public void consultar_detalhes_de_votacao_retorna_detalhes() throws IOException {
         String idVotacao = "2293449-250";
         Optional<DetalheVotacao> detalheOpt = client.consultarDetalhes(idVotacao);
         assertTrue(detalheOpt.isPresent());
@@ -64,14 +62,14 @@ public class VotacaoClientTest {
     }
 
     @Test
-    public void consultar_detalhes_de_votacao_que_nao_existe_retorna_vazio() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException {
+    public void consultar_detalhes_de_votacao_que_nao_existe_retorna_vazio() throws IOException {
         String idVotacao = "1";
         Optional<DetalheVotacao> detalheOpt = client.consultarDetalhes(idVotacao);
         assertTrue(detalheOpt.isEmpty());
     }
 
     @Test
-    public void consultar_votos_retorna_lista_nao_paginada_de_votos() throws RespostaNaoEsperadaException, CamaraClientStatusException, RecursoNaoExisteException, IOException {
+    public void consultar_votos_retorna_lista_nao_paginada_de_votos() throws IOException {
         String idVotacao = "2293449-250";
         List<Voto> votos = client.consultarVotos(idVotacao);
         assertFalse(votos.isEmpty());
@@ -89,7 +87,7 @@ public class VotacaoClientTest {
     }
 
     @Test
-    public void consultar_orientacoes_de_votacao_retorna_lista_nao_paginada() throws RespostaNaoEsperadaException, CamaraClientStatusException, RecursoNaoExisteException, IOException {
+    public void consultar_orientacoes_de_votacao_retorna_lista_nao_paginada() throws IOException {
         String idVotacao = "2293449-250";
         List<OrientacaoVoto> orientacoes = client.consultarOrientacoes(idVotacao);
         assertFalse(orientacoes.isEmpty());

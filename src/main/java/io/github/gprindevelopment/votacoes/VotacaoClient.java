@@ -1,17 +1,10 @@
 package io.github.gprindevelopment.votacoes;
 
-import io.github.gprindevelopment.http.Client;
-import io.github.gprindevelopment.http.OkHttpClientSingleton;
-import io.github.gprindevelopment.http.RespostaCamara;
 import io.github.gprindevelopment.dominio.DetalheVotacao;
 import io.github.gprindevelopment.dominio.OrientacaoVoto;
 import io.github.gprindevelopment.dominio.Votacao;
 import io.github.gprindevelopment.dominio.Voto;
-import io.github.gprindevelopment.http.ConstantesApiCamara;
-import io.github.gprindevelopment.http.Pagina;
-import io.github.gprindevelopment.exception.CamaraClientStatusException;
-import io.github.gprindevelopment.exception.RecursoNaoExisteException;
-import io.github.gprindevelopment.exception.RespostaNaoEsperadaException;
+import io.github.gprindevelopment.http.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -30,17 +23,17 @@ public class VotacaoClient extends Client {
                 .build());
     }
 
-    public Pagina<Votacao> consultar(ConsultaVotacao consulta) throws RespostaNaoEsperadaException, CamaraClientStatusException, RecursoNaoExisteException, IOException {
+    public Pagina<Votacao> consultar(ConsultaVotacao consulta) throws IOException {
         return consultarComPaginacao(consulta, ConstantesApiCamara.VOTACAO_API_URL, Votacao.class);
     }
 
-    public Optional<DetalheVotacao> consultarDetalhes(String idVotacao) throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException {
+    public Optional<DetalheVotacao> consultarDetalhes(String idVotacao) throws IOException {
         validarIdVotacao(idVotacao);
         RespostaCamara<DetalheVotacao> resposta = consultarPorId(idVotacao, ConstantesApiCamara.VOTACAO_API_URL, DetalheVotacao.class);
         return Optional.ofNullable(resposta.getDados());
     }
 
-    public List<Voto> consultarVotos(String idVotacao) throws RespostaNaoEsperadaException, CamaraClientStatusException, RecursoNaoExisteException, IOException {
+    public List<Voto> consultarVotos(String idVotacao) throws IOException {
         validarIdVotacao(idVotacao);
         return consultarSemPaginacao(
                 new ConsultaVotacao.Builder().build(),
@@ -49,7 +42,7 @@ public class VotacaoClient extends Client {
                 new String[]{idVotacao, "votos"});
     }
 
-    public List<OrientacaoVoto> consultarOrientacoes(String idVotacao) throws RespostaNaoEsperadaException, CamaraClientStatusException, RecursoNaoExisteException, IOException {
+    public List<OrientacaoVoto> consultarOrientacoes(String idVotacao) throws IOException {
         validarIdVotacao(idVotacao);
         return consultarSemPaginacao(
                 new ConsultaVotacao.Builder().build(),

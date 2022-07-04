@@ -1,7 +1,7 @@
 package io.github.gprindevelopment.http;
 
 import io.github.gprindevelopment.exception.CamaraClientStatusException;
-import io.github.gprindevelopment.exception.RespostaNaoEsperadaException;
+import io.github.gprindevelopment.exception.RespostaInesperadaException;
 import io.github.gprindevelopment.mother.ResponseMother;
 import okhttp3.Call;
 import okhttp3.Headers;
@@ -55,22 +55,22 @@ public class ClientTest {
         Call chamada = mock(Call.class);
         when(chamada.execute()).thenReturn(resposta);
 
-        RespostaNaoEsperadaException e = assertThrows(RespostaNaoEsperadaException.class, () -> client.executarChamada(chamada, classeEsperada));
+        RespostaInesperadaException e = assertThrows(RespostaInesperadaException.class, () -> client.executarChamada(chamada, classeEsperada));
         assertTrue(e.getMessage().contains("String"));
     }
 
     @Test
     public void consulta_paginada_disparar_erro_se_nao_houverem_cabecalhos() {
         RespostaCamara<String> respostaCamara1 = new RespostaCamara<>("Algum dado");
-        assertThrows(RespostaNaoEsperadaException.class, () -> client.extrairCabecalhoTotalItens(respostaCamara1));
+        assertThrows(RespostaInesperadaException.class, () -> client.extrairCabecalhoTotalItens(respostaCamara1));
 
         RespostaCamara<String> respostaCamara2 = new RespostaCamara<>("Algum dado");
         respostaCamara2.setCabecalhos(Headers.of(new HashMap<>()));
-        assertThrows(RespostaNaoEsperadaException.class, () -> client.extrairCabecalhoTotalItens(respostaCamara2));
+        assertThrows(RespostaInesperadaException.class, () -> client.extrairCabecalhoTotalItens(respostaCamara2));
     }
 
     @Test
-    public void consulta_paginada_extrair_total_itens_do_cabecalho() throws RespostaNaoEsperadaException {
+    public void consulta_paginada_extrair_total_itens_do_cabecalho() {
         int totalItens = 56;
         RespostaCamara<String> respostaCamara = new RespostaCamara<>("Algum dado");
         respostaCamara.setCabecalhos(Headers.of(ConstantesApiCamara.CABECALHO_TOTAL_ITENS, String.valueOf(totalItens)));
@@ -79,7 +79,7 @@ public class ClientTest {
     }
 
     @Test
-    public void resposta_404_retorna_resposta_vazia_e_nao_um_erro() throws IOException, RespostaNaoEsperadaException, CamaraClientStatusException {
+    public void resposta_404_retorna_resposta_vazia_e_nao_um_erro() throws IOException {
         int statusCode = 404;
         Response resposta = ResponseMother.gerarResponse("Teste", statusCode);
 
@@ -92,7 +92,7 @@ public class ClientTest {
     }
 
     @Test
-    public void resposta_valida_retorna_objeto_de_dados_com_status_200() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException {
+    public void resposta_valida_retorna_objeto_de_dados_com_status_200() throws IOException {
         int statusCode = 200;
         String corpoEsperado = "{\"dados\": \"Teste\"}";
         Response resposta = ResponseMother.gerarResponse(corpoEsperado, statusCode);

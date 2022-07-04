@@ -3,9 +3,6 @@ package io.github.gprindevelopment.deputados;
 import io.github.gprindevelopment.dominio.Deputado;
 import io.github.gprindevelopment.dominio.Estado;
 import io.github.gprindevelopment.dominio.Genero;
-import io.github.gprindevelopment.exception.CamaraClientStatusException;
-import io.github.gprindevelopment.exception.RecursoNaoExisteException;
-import io.github.gprindevelopment.exception.RespostaNaoEsperadaException;
 import io.github.gprindevelopment.http.Ordem;
 import io.github.gprindevelopment.http.Pagina;
 import org.junit.jupiter.api.Test;
@@ -23,7 +20,7 @@ public class DeputadoClientTest {
     private final DeputadoClient client = new DeputadoClient();
 
     @Test
-    public void consulta_deputado_por_id_retorna_deputado() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException {
+    public void consulta_deputado_por_id_retorna_deputado() throws IOException {
         int deputado = 76874;
         Optional<Deputado> deputadoOpt = client.consultarDeputadoPorId(deputado);
         assertTrue(deputadoOpt.isPresent());
@@ -32,14 +29,14 @@ public class DeputadoClientTest {
     }
 
     @Test
-    public void consulta_por_deputado_que_nao_existe_retorna_vazio() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException {
+    public void consulta_por_deputado_que_nao_existe_retorna_vazio() throws IOException {
         int deputado = 99999999;
         Optional<Deputado> deputadoOpt = client.consultarDeputadoPorId(deputado);
         assertTrue(deputadoOpt.isEmpty());
     }
 
     @Test
-    public void consulta_paginada_de_deputados_retorna_uma_pagina_de_deputados() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException, RecursoNaoExisteException {
+    public void consulta_paginada_de_deputados_retorna_uma_pagina_de_deputados() throws IOException {
         int itens = 10;
         int paginaAtual = 1;
         ConsultaDeputado consulta = new ConsultaDeputado.Builder()
@@ -55,7 +52,7 @@ public class DeputadoClientTest {
     }
 
     @Test
-    public void consulta_paginada_sem_parametros_usa_default_da_camara() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException, RecursoNaoExisteException {
+    public void consulta_paginada_sem_parametros_usa_default_da_camara() throws IOException {
         Pagina<Deputado> pagina = client.consultar(new ConsultaDeputado.Builder().build());
         assertFalse(pagina.isEmpty());
         assertFalse(pagina.temProxima());
@@ -63,7 +60,7 @@ public class DeputadoClientTest {
     }
 
     @Test
-    public void consulta_paginada_por_nome_retorna_deputados_corretos() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException, RecursoNaoExisteException {
+    public void consulta_paginada_por_nome_retorna_deputados_corretos() throws IOException {
         String nome = "Freixo";
         ConsultaDeputado consulta = new ConsultaDeputado.Builder()
                 .nome(nome)
@@ -85,7 +82,7 @@ public class DeputadoClientTest {
     }
 
     @Test
-    public void consulta_paginada_por_id_legislatura_retorna_deputados_corretos() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException, RecursoNaoExisteException {
+    public void consulta_paginada_por_id_legislatura_retorna_deputados_corretos() throws IOException {
         int itens = 20;
         int paginaAtual = 1;
         int[] legislaturasEsperadas = new int[]{56,55};
@@ -106,7 +103,7 @@ public class DeputadoClientTest {
     }
 
     @Test
-    public void consulta_paginada_por_uf_retorna_deputados_do_estado() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException, RecursoNaoExisteException {
+    public void consulta_paginada_por_uf_retorna_deputados_do_estado() throws IOException {
         int itens = 20;
         int paginaAtual = 1;
         Estado estadoConsulta = Estado.RJ;
@@ -123,7 +120,7 @@ public class DeputadoClientTest {
     }
 
     @Test
-    public void consulta_paginada_por_multiplos_ufs_retorna_deputados_dos_estados() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException, RecursoNaoExisteException {
+    public void consulta_paginada_por_multiplos_ufs_retorna_deputados_dos_estados() throws IOException {
         int itens = 20;
         int paginaAtual = 1;
         Estado[] estadosEsperados = new Estado[]{Estado.RJ, Estado.SP};
@@ -144,7 +141,7 @@ public class DeputadoClientTest {
     }
 
     @Test
-    public void consulta_paginada_por_genero_retorna_deputados_do_genero() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException, RecursoNaoExisteException {
+    public void consulta_paginada_por_genero_retorna_deputados_do_genero() throws IOException {
         int itens = 20;
         int paginaAtual = 1;
         Genero generoEsperado = Genero.FEM;

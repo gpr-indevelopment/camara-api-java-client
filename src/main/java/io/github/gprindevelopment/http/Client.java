@@ -3,7 +3,7 @@ package io.github.gprindevelopment.http;
 import com.google.gson.reflect.TypeToken;
 import io.github.gprindevelopment.exception.CamaraClientStatusException;
 import io.github.gprindevelopment.exception.RecursoNaoExisteException;
-import io.github.gprindevelopment.exception.RespostaNaoEsperadaException;
+import io.github.gprindevelopment.exception.RespostaInesperadaException;
 import io.github.gprindevelopment.json.GsonSingleton;
 import okhttp3.*;
 
@@ -24,7 +24,7 @@ public class Client {
         this.client = OkHttpClientSingleton.getInstancia();
     }
 
-    protected <T> RespostaCamara<T> executarChamada(Call chamada, Type tipoResposta) throws IOException, CamaraClientStatusException, RespostaNaoEsperadaException {
+    protected <T> RespostaCamara<T> executarChamada(Call chamada, Type tipoResposta) throws IOException {
         try (Response resposta = chamada.execute()) {
             if (resposta.code() == 404) {
                 RespostaCamara<T> resultadoVazio = new RespostaCamara<>(null);
@@ -39,7 +39,7 @@ public class Client {
             ResponseBody body = resposta.body();
             if (body == null) {
                 String mensagem = String.format("A resposta é null e o tipo esperado é %s.", tipoResposta.getTypeName());
-                throw new RespostaNaoEsperadaException(mensagem);
+                throw new RespostaInesperadaException(mensagem);
             }
             String json = body.string();
             Type tipoEmbrulhado = TypeToken.getParameterized(RespostaCamara.class, tipoResposta).getType();
@@ -50,36 +50,36 @@ public class Client {
         }
     }
 
-    protected int extrairCabecalhoTotalItens(RespostaCamara resposta) throws RespostaNaoEsperadaException {
+    protected int extrairCabecalhoTotalItens(RespostaCamara resposta) {
         if (resposta.getCabecalhos() == null) {
-            throw new RespostaNaoEsperadaException("O objeto de resposta da câmara não tem cabeçalhos.");
+            throw new RespostaInesperadaException("O objeto de resposta da câmara não tem cabeçalhos.");
         }
         String valorCabecalho = resposta.getCabecalhos().get(ConstantesApiCamara.CABECALHO_TOTAL_ITENS);
         if (valorCabecalho == null || valorCabecalho.isBlank()) {
-            throw new RespostaNaoEsperadaException("Uma consulta páginada esperava o cabeçalho x-total-count do número total de itens, mas ele está vazio.");
+            throw new RespostaInesperadaException("Uma consulta páginada esperava o cabeçalho x-total-count do número total de itens, mas ele está vazio.");
         }
         return Integer.parseInt(valorCabecalho);
     }
 
-    protected <T> RespostaCamara<T> consultarPorId(String id, String urlBase, Type tipoEsperado) throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException {
+    protected <T> RespostaCamara<T> consultarPorId(String id, String urlBase, Type tipoEsperado) throws IOException {
         Request requisicao = new RequisicaoBuilder(urlBase).segmentosPath(id).build();
         Call chamada = client.newCall(requisicao);
         return executarChamada(chamada, tipoEsperado);
     }
 
-    protected <T> List<T> consultarSemPaginacao(Consulta consulta, String urlBase, Type tipoEsperado, String... segmentosPath) throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException, RecursoNaoExisteException {
+    protected <T> List<T> consultarSemPaginacao(Consulta consulta, String urlBase, Type tipoEsperado, String... segmentosPath) throws IOException {
         RespostaCamara<List<T>> resposta = executarConsulta(consulta, urlBase, tipoEsperado, segmentosPath);
         return resposta.getDados();
     }
 
-    protected <T> Pagina<T> consultarComPaginacao(Consulta consulta, String urlBase, Type tipoEsperado, String... segmentosPath) throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException, RecursoNaoExisteException {
+    protected <T> Pagina<T> consultarComPaginacao(Consulta consulta, String urlBase, Type tipoEsperado, String... segmentosPath) throws IOException {
         RespostaCamara<List<T>> resposta = executarConsulta(consulta, urlBase, tipoEsperado, segmentosPath);
         return new Pagina<>(resposta.getDados(),
                 extrairCabecalhoTotalItens(resposta),
                 extrairPaginaDaConsulta(consulta));
     }
 
-    private <T> RespostaCamara<List<T>> executarConsulta(Consulta consulta, String urlBase, Type tipoEsperado, String... segmentosPath) throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException, RecursoNaoExisteException {
+    private <T> RespostaCamara<List<T>> executarConsulta(Consulta consulta, String urlBase, Type tipoEsperado, String... segmentosPath) throws IOException {
         Request requisicao = prepararConsulta(consulta, urlBase, segmentosPath);
         Call chamada = client.newCall(requisicao);
         RespostaCamara<List<T>> resposta = executarChamada(chamada, TypeToken.getParameterized(List.class, tipoEsperado).getType());

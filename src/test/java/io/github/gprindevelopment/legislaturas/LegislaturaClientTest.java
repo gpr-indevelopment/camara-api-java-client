@@ -1,12 +1,9 @@
 package io.github.gprindevelopment.legislaturas;
 
+import io.github.gprindevelopment.dominio.Legislatura;
 import io.github.gprindevelopment.http.Consulta;
 import io.github.gprindevelopment.http.Ordem;
 import io.github.gprindevelopment.http.Pagina;
-import io.github.gprindevelopment.dominio.Legislatura;
-import io.github.gprindevelopment.exception.CamaraClientStatusException;
-import io.github.gprindevelopment.exception.RecursoNaoExisteException;
-import io.github.gprindevelopment.exception.RespostaNaoEsperadaException;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -24,13 +21,13 @@ public class LegislaturaClientTest {
     private final LegislaturaClient client = new LegislaturaClient();
 
     @Test
-    public void consultar_legislatura_corrente_retorna_56() throws IOException, CamaraClientStatusException, RespostaNaoEsperadaException, URISyntaxException, RecursoNaoExisteException {
+    public void consultar_legislatura_corrente_retorna_56() throws IOException, URISyntaxException {
         Legislatura legislatura = client.consultarLegislaturaAtual();
         assertEquals(legislatura, construirLegislaturaAtual());
     }
 
     @Test
-    public void consulta_paginada_e_ordenada_de_legislaturas() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException, URISyntaxException, RecursoNaoExisteException {
+    public void consulta_paginada_e_ordenada_de_legislaturas() throws IOException, URISyntaxException {
         int itens = 10;
         int paginaAtual = 1;
         Consulta consulta = new Consulta.Builder()
@@ -53,7 +50,7 @@ public class LegislaturaClientTest {
     }
 
     @Test
-    public void consulta_sem_parametros_assume_default_da_camara() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException, URISyntaxException, RecursoNaoExisteException {
+    public void consulta_sem_parametros_assume_default_da_camara() throws IOException, URISyntaxException {
         Consulta consulta = new Consulta.Builder().build();
         Pagina<Legislatura> pagina = client.consultar(consulta);
         assertEquals(15, pagina.size());
@@ -64,7 +61,7 @@ public class LegislaturaClientTest {
     }
 
     @Test
-    public void consulta_com_pagina_fora_do_limite_retorna_vazia() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException, RecursoNaoExisteException {
+    public void consulta_com_pagina_fora_do_limite_retorna_vazia() throws IOException {
         int paginaAtual = 150;
         Consulta consulta = new Consulta.Builder()
                 .ordenarPor("id", Ordem.DESC)
@@ -79,14 +76,14 @@ public class LegislaturaClientTest {
     }
 
     @Test
-    public void consultar_legislatura_por_id_retorna_uma_legislatura() throws URISyntaxException, RespostaNaoEsperadaException, CamaraClientStatusException, IOException {
+    public void consultar_legislatura_por_id_retorna_uma_legislatura() throws IOException, URISyntaxException {
         Optional<Legislatura> legislaturaOpt = client.consultarLegislaturaPorId(ID_LEGISLATURA_CORRENTE);
         assertTrue(legislaturaOpt.isPresent());
         assertEquals(construirLegislaturaAtual(), legislaturaOpt.get());
     }
 
     @Test
-    public void consultar_legislatura_por_id_quando_nao_existe_retorna_optional_empty() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException {
+    public void consultar_legislatura_por_id_quando_nao_existe_retorna_optional_empty() throws IOException {
         Optional<Legislatura> legislaturaOpt = client.consultarLegislaturaPorId(99999);
         assertTrue(legislaturaOpt.isEmpty());
     }

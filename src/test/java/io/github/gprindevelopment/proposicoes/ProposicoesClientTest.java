@@ -1,13 +1,11 @@
 package io.github.gprindevelopment.proposicoes;
 
-import io.github.gprindevelopment.http.Pagina;
 import io.github.gprindevelopment.dominio.Autor;
 import io.github.gprindevelopment.dominio.DetalhesProposicao;
 import io.github.gprindevelopment.dominio.Proposicao;
 import io.github.gprindevelopment.dominio.TramitacaoProposicao;
-import io.github.gprindevelopment.exception.CamaraClientStatusException;
 import io.github.gprindevelopment.exception.RecursoNaoExisteException;
-import io.github.gprindevelopment.exception.RespostaNaoEsperadaException;
+import io.github.gprindevelopment.http.Pagina;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -22,7 +20,7 @@ public class ProposicoesClientTest {
     private final ProposicaoClient client = new ProposicaoClient();
 
     @Test
-    public void consultar_proposicoes_por_deputado_autor_retorna_proposicoes() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException, RecursoNaoExisteException {
+    public void consultar_proposicoes_por_deputado_autor_retorna_proposicoes() throws IOException {
         int deputadoAutor = 160976;
         int itens = 3;
         int paginaAtual = 1;
@@ -43,7 +41,7 @@ public class ProposicoesClientTest {
     }
 
     @Test
-    public void consultar_proposicao_por_id_retorna_detalhes() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException {
+    public void consultar_proposicao_por_id_retorna_detalhes() throws IOException {
         long idProposicao = 2191128;
         Optional<DetalhesProposicao> detalhesOpt = client.consultarDetalhes(idProposicao);
         assertTrue(detalhesOpt.isPresent());
@@ -60,14 +58,14 @@ public class ProposicoesClientTest {
     }
 
     @Test
-    public void consultar_proposicao_por_id_nao_existente_retorna_vazio() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException {
+    public void consultar_proposicao_por_id_nao_existente_retorna_vazio() throws IOException {
         long idProposicao = 1;
         Optional<DetalhesProposicao> detalhesOpt = client.consultarDetalhes(idProposicao);
         assertTrue(detalhesOpt.isEmpty());
     }
 
     @Test
-    public void consultar_tramitacao_de_proposicao_retorna_lista_sem_paginacao() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException, RecursoNaoExisteException {
+    public void consultar_tramitacao_de_proposicao_retorna_lista_sem_paginacao() throws IOException {
         long idProposicao = 2191128;
         ConsultaTramitacao consulta = new ConsultaTramitacao.Builder(idProposicao).build();
         List<TramitacaoProposicao> tramitacoes = client.consultarTramitacoes(consulta);
@@ -80,7 +78,7 @@ public class ProposicoesClientTest {
     }
 
     @Test
-    public void consultar_tramitacao_de_proposicao_por_data_retorna_tramitacoes_nas_datas() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException, RecursoNaoExisteException {
+    public void consultar_tramitacao_de_proposicao_por_data_retorna_tramitacoes_nas_datas() throws IOException {
         long idProposicao = 2191128;
         LocalDate dataInicio = LocalDate.of(2019, 2, 1);
         LocalDate dataFim = LocalDate.of(2019, 3, 1);

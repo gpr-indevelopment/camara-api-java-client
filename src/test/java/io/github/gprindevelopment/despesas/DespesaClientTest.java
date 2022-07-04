@@ -2,9 +2,7 @@ package io.github.gprindevelopment.despesas;
 
 import io.github.gprindevelopment.dominio.Despesa;
 import io.github.gprindevelopment.dominio.Legislatura;
-import io.github.gprindevelopment.exception.CamaraClientStatusException;
 import io.github.gprindevelopment.exception.RecursoNaoExisteException;
-import io.github.gprindevelopment.exception.RespostaNaoEsperadaException;
 import io.github.gprindevelopment.http.Pagina;
 import io.github.gprindevelopment.legislaturas.LegislaturaClient;
 import org.junit.jupiter.api.Test;
@@ -25,7 +23,7 @@ public class DespesaClientTest {
     private final DespesaClient client = new DespesaClient();
 
     @Test
-    public void consulta_por_despesas_de_deputado_na_legislatura_retorna_despesas_paginado() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException, RecursoNaoExisteException {
+    public void consulta_por_despesas_de_deputado_na_legislatura_retorna_despesas_paginado() throws IOException {
         int legislatura = 56;
         int idDeputado = 76874;
         int itens = 10;
@@ -45,7 +43,7 @@ public class DespesaClientTest {
     }
 
     @Test
-    public void consulta_por_despesa_com_varias_legislaturas_retorna_despesas_das_legislaturas() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException, RecursoNaoExisteException {
+    public void consulta_por_despesa_com_varias_legislaturas_retorna_despesas_das_legislaturas() throws IOException {
         LegislaturaClient legislaturaClient = new LegislaturaClient();
         Optional<Legislatura> leg55Opt = legislaturaClient.consultarLegislaturaPorId(55);
         Optional<Legislatura> leg56Opt = legislaturaClient.consultarLegislaturaPorId(56);
@@ -72,7 +70,7 @@ public class DespesaClientTest {
     }
 
     @Test
-    public void consultar_despesas_com_ano_e_mes_retorna_datas_corretas() throws RespostaNaoEsperadaException, CamaraClientStatusException, IOException, RecursoNaoExisteException {
+    public void consultar_despesas_com_ano_e_mes_retorna_datas_corretas() throws IOException {
         int idDeputado = 160976;
         int itens = 50;
         int paginaAtual = 1;
@@ -103,7 +101,7 @@ public class DespesaClientTest {
     }
 
     @Test
-    public void deve_ser_possivel_usar_a_consulta_de_despesas_com_ano_e_mes_em_lista() throws RespostaNaoEsperadaException, CamaraClientStatusException, RecursoNaoExisteException, IOException {
+    public void deve_ser_possivel_usar_a_consulta_de_despesas_com_ano_e_mes_em_lista() throws IOException {
         int idDeputado = 160976;
         int itens = 50;
         int paginaAtual = 1;
