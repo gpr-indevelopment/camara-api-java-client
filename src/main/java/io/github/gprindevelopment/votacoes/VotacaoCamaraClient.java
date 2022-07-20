@@ -4,36 +4,29 @@ import io.github.gprindevelopment.dominio.DetalheVotacao;
 import io.github.gprindevelopment.dominio.OrientacaoVoto;
 import io.github.gprindevelopment.dominio.Votacao;
 import io.github.gprindevelopment.dominio.Voto;
-import io.github.gprindevelopment.http.*;
+import io.github.gprindevelopment.http.CamaraClient;
+import io.github.gprindevelopment.http.ConstantesApiCamara;
+import io.github.gprindevelopment.http.Pagina;
+import io.github.gprindevelopment.http.RespostaCamara;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
-public class VotacaoClient extends Client {
+public class VotacaoCamaraClient extends CamaraClient {
 
-    public VotacaoClient() {
-        // Workaround necessário já que a API de votações é lenta. Uso de cache é recomendado.
-        super(OkHttpClientSingleton
-                .getInstancia()
-                .newBuilder()
-                .readTimeout(1, TimeUnit.MINUTES)
-                .build());
-    }
-
-    public Pagina<Votacao> consultar(ConsultaVotacao consulta) throws IOException {
+    public Pagina<Votacao> consultar(ConsultaVotacao consulta) throws IOException, InterruptedException {
         return consultarComPaginacao(consulta, ConstantesApiCamara.VOTACAO_API_URL, Votacao.class);
     }
 
-    public Optional<DetalheVotacao> consultarDetalhes(String idVotacao) throws IOException {
+    public Optional<DetalheVotacao> consultarDetalhes(String idVotacao) throws IOException, InterruptedException {
         validarIdVotacao(idVotacao);
         RespostaCamara<DetalheVotacao> resposta = consultarPorId(idVotacao, ConstantesApiCamara.VOTACAO_API_URL, DetalheVotacao.class);
         return Optional.ofNullable(resposta.getDados());
     }
 
-    public List<Voto> consultarVotos(String idVotacao) throws IOException {
+    public List<Voto> consultarVotos(String idVotacao) throws IOException, InterruptedException {
         validarIdVotacao(idVotacao);
         return consultarSemPaginacao(
                 new ConsultaVotacao.Builder().build(),
@@ -42,7 +35,7 @@ public class VotacaoClient extends Client {
                 new String[]{idVotacao, "votos"});
     }
 
-    public List<OrientacaoVoto> consultarOrientacoes(String idVotacao) throws IOException {
+    public List<OrientacaoVoto> consultarOrientacoes(String idVotacao) throws IOException, InterruptedException {
         validarIdVotacao(idVotacao);
         return consultarSemPaginacao(
                 new ConsultaVotacao.Builder().build(),

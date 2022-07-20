@@ -15,12 +15,12 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ProposicoesClientTest {
+public class ProposicoesCamaraClientTest {
 
-    private final ProposicaoClient client = new ProposicaoClient();
+    private final ProposicaoCamaraClient client = new ProposicaoCamaraClient();
 
     @Test
-    public void consultar_proposicoes_por_deputado_autor_retorna_proposicoes() throws IOException {
+    public void consultar_proposicoes_por_deputado_autor_retorna_proposicoes() throws IOException, InterruptedException {
         int deputadoAutor = 160976;
         int itens = 3;
         int paginaAtual = 1;
@@ -41,7 +41,7 @@ public class ProposicoesClientTest {
     }
 
     @Test
-    public void consultar_proposicao_por_id_retorna_detalhes() throws IOException {
+    public void consultar_proposicao_por_id_retorna_detalhes() throws IOException, InterruptedException {
         long idProposicao = 2191128;
         Optional<DetalhesProposicao> detalhesOpt = client.consultarDetalhes(idProposicao);
         assertTrue(detalhesOpt.isPresent());
@@ -58,14 +58,14 @@ public class ProposicoesClientTest {
     }
 
     @Test
-    public void consultar_proposicao_por_id_nao_existente_retorna_vazio() throws IOException {
+    public void consultar_proposicao_por_id_nao_existente_retorna_vazio() throws IOException, InterruptedException {
         long idProposicao = 1;
         Optional<DetalhesProposicao> detalhesOpt = client.consultarDetalhes(idProposicao);
         assertTrue(detalhesOpt.isEmpty());
     }
 
     @Test
-    public void consultar_tramitacao_de_proposicao_retorna_lista_sem_paginacao() throws IOException {
+    public void consultar_tramitacao_de_proposicao_retorna_lista_sem_paginacao() throws IOException, InterruptedException {
         long idProposicao = 2191128;
         ConsultaTramitacao consulta = new ConsultaTramitacao.Builder(idProposicao).build();
         List<TramitacaoProposicao> tramitacoes = client.consultarTramitacoes(consulta);
@@ -78,7 +78,7 @@ public class ProposicoesClientTest {
     }
 
     @Test
-    public void consultar_tramitacao_de_proposicao_por_data_retorna_tramitacoes_nas_datas() throws IOException {
+    public void consultar_tramitacao_de_proposicao_por_data_retorna_tramitacoes_nas_datas() throws IOException, InterruptedException {
         long idProposicao = 2191128;
         LocalDate dataInicio = LocalDate.of(2019, 2, 1);
         LocalDate dataFim = LocalDate.of(2019, 3, 1);

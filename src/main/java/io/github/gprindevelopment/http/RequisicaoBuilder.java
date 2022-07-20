@@ -1,8 +1,8 @@
 package io.github.gprindevelopment.http;
 
-import okhttp3.HttpUrl;
-import okhttp3.Request;
-
+import java.net.URI;
+import java.net.http.HttpRequest;
+import java.time.Duration;
 import java.util.Objects;
 
 public class RequisicaoBuilder {
@@ -27,40 +27,38 @@ public class RequisicaoBuilder {
         return this;
     }
 
-    public Request build() {
-        HttpUrl.Builder urlBuilder = construirUrl(urlBase).newBuilder();
-        adicionarSegmentos(urlBuilder);
-        adicionarParametrosDeConsulta(urlBuilder);
-        return new Request.Builder()
-                .url(urlBuilder.build().toString())
+    // Timeout padrão de 1 minuto para todas as requests. Pode ser virar parâmetro no futuro se necessário.
+    public HttpRequest build() {
+        return HttpRequest
+                .newBuilder(construirUri(urlBase))
                 .header("accept", "application/json")
+                .timeout(Duration.ofMinutes(1L))
                 .build();
     }
 
-    private void adicionarParametrosDeConsulta(HttpUrl.Builder urlBuilder) {
-        if (consulta != null) {
-            consulta.getParametros().forEach(urlBuilder::addQueryParameter);
+    private void adicionarParametrosDeConsulta(StringBuilder sb) {
+        if (consulta != null && consulta.getParametros().size() > 0) {
+            sb.append("?");
+            consulta.getParametros().forEach((chave, valor) -> sb.append(chave).append("=").append(valor).append("&"));
         }
     }
 
-    private void adicionarSegmentos(HttpUrl.Builder urlBuilder) {
+    private void adicionarSegmentos(StringBuilder sb) {
         if (segmentosPath != null) {
             for (String segmento : segmentosPath) {
-                urlBuilder.addEncodedPathSegments(segmento);
+                sb.append("/").append(segmento);
             }
         }
     }
 
-    private HttpUrl construirUrl(String urlBase) {
+    private URI construirUri(String urlBase) {
         urlBase = Objects.requireNonNull(urlBase, "Uma consulta por ID precisa de uma URL base para concatenação do ID");
         if (urlBase.isBlank()) {
             throw new IllegalArgumentException("A URL base para concatenação do ID na consulta por ID não pode estar em branco");
         }
-        HttpUrl url = HttpUrl.parse(urlBase);
-        if (url == null) {
-            String mensagem = String.format("A URL base %s informada não pode ser interpretada como uma URL", urlBase);
-            throw new IllegalArgumentException(mensagem);
-        }
-        return url;
+        StringBuilder sb = new StringBuilder(urlBase);
+        adicionarSegmentos(sb);
+        adicionarParametrosDeConsulta(sb);
+        return URI.create(sb.toString());
     }
 }

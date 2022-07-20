@@ -1,10 +1,14 @@
 package io.github.gprindevelopment.http;
 
-import okhttp3.Headers;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public class RespostaCamara<T> {
 
-    private Headers cabecalhos;
+    private Map<String, List<String>> cabecalhos = new HashMap<>();
+
     private final T dados;
 
     private int statusCode;
@@ -17,12 +21,20 @@ public class RespostaCamara<T> {
         return dados;
     }
 
-    public void setCabecalhos(Headers cabecalhos) {
+    public void setCabecalhos(Map<String, List<String>> cabecalhos) {
         this.cabecalhos = cabecalhos;
     }
 
-    public Headers getCabecalhos() {
+    public Map<String, List<String>> getCabecalhos() {
         return cabecalhos;
+    }
+
+    public Optional<String> getPrimeiroValorCabecalho(String nomeCabecalho) {
+        List<String> valores = cabecalhos.get(nomeCabecalho);
+        if (valores != null) {
+            return Optional.ofNullable(valores.get(0));
+        }
+        return Optional.empty();
     }
 
     public int getStatusCode() {

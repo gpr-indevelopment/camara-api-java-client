@@ -14,20 +14,20 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class LegislaturaClientTest {
+public class LegislaturaCamaraClientTest {
 
     private static final int ID_LEGISLATURA_CORRENTE = 56;
 
-    private final LegislaturaClient client = new LegislaturaClient();
+    private final LegislaturaCamaraClient client = new LegislaturaCamaraClient();
 
     @Test
-    public void consultar_legislatura_corrente_retorna_56() throws IOException, URISyntaxException {
+    public void consultar_legislatura_corrente_retorna_56() throws IOException, URISyntaxException, InterruptedException {
         Legislatura legislatura = client.consultarLegislaturaAtual();
         assertEquals(legislatura, construirLegislaturaAtual());
     }
 
     @Test
-    public void consulta_paginada_e_ordenada_de_legislaturas() throws IOException, URISyntaxException {
+    public void consulta_paginada_e_ordenada_de_legislaturas() throws IOException, URISyntaxException, InterruptedException {
         int itens = 10;
         int paginaAtual = 1;
         Consulta consulta = new Consulta.Builder()
@@ -50,7 +50,7 @@ public class LegislaturaClientTest {
     }
 
     @Test
-    public void consulta_sem_parametros_assume_default_da_camara() throws IOException, URISyntaxException {
+    public void consulta_sem_parametros_assume_default_da_camara() throws IOException, URISyntaxException, InterruptedException {
         Consulta consulta = new Consulta.Builder().build();
         Pagina<Legislatura> pagina = client.consultar(consulta);
         assertEquals(15, pagina.size());
@@ -61,7 +61,7 @@ public class LegislaturaClientTest {
     }
 
     @Test
-    public void consulta_com_pagina_fora_do_limite_retorna_vazia() throws IOException {
+    public void consulta_com_pagina_fora_do_limite_retorna_vazia() throws IOException, InterruptedException {
         int paginaAtual = 150;
         Consulta consulta = new Consulta.Builder()
                 .ordenarPor("id", Ordem.DESC)
@@ -76,14 +76,14 @@ public class LegislaturaClientTest {
     }
 
     @Test
-    public void consultar_legislatura_por_id_retorna_uma_legislatura() throws IOException, URISyntaxException {
+    public void consultar_legislatura_por_id_retorna_uma_legislatura() throws IOException, URISyntaxException, InterruptedException {
         Optional<Legislatura> legislaturaOpt = client.consultarLegislaturaPorId(ID_LEGISLATURA_CORRENTE);
         assertTrue(legislaturaOpt.isPresent());
         assertEquals(construirLegislaturaAtual(), legislaturaOpt.get());
     }
 
     @Test
-    public void consultar_legislatura_por_id_quando_nao_existe_retorna_optional_empty() throws IOException {
+    public void consultar_legislatura_por_id_quando_nao_existe_retorna_optional_empty() throws IOException, InterruptedException {
         Optional<Legislatura> legislaturaOpt = client.consultarLegislaturaPorId(99999);
         assertTrue(legislaturaOpt.isEmpty());
     }

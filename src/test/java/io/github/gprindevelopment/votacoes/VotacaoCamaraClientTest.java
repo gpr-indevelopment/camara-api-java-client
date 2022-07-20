@@ -14,12 +14,12 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class VotacaoClientTest {
+public class VotacaoCamaraClientTest {
 
-    private final VotacaoClient client = new VotacaoClient();
+    private final VotacaoCamaraClient client = new VotacaoCamaraClient();
 
     @Test
-    public void consultar_votacao_por_id_de_proposicao_retorna_votacoes() throws IOException {
+    public void consultar_votacao_por_id_de_proposicao_retorna_votacoes() throws IOException, InterruptedException {
         long idProposicao = 2293449;
         int itens = 2;
         int paginaAtual = 1;
@@ -40,7 +40,7 @@ public class VotacaoClientTest {
     }
 
     @Test
-    public void consultar_votacoes_para_proposicao_que_nao_existe_retorna_vazio() throws IOException {
+    public void consultar_votacoes_para_proposicao_que_nao_existe_retorna_vazio() throws IOException, InterruptedException {
         long idProposicao = 1;
         ConsultaVotacao consulta = new ConsultaVotacao.Builder()
                 .proposicoes(idProposicao)
@@ -50,7 +50,7 @@ public class VotacaoClientTest {
     }
 
     @Test
-    public void consultar_detalhes_de_votacao_retorna_detalhes() throws IOException {
+    public void consultar_detalhes_de_votacao_retorna_detalhes() throws IOException, InterruptedException {
         String idVotacao = "2293449-250";
         Optional<DetalheVotacao> detalheOpt = client.consultarDetalhes(idVotacao);
         assertTrue(detalheOpt.isPresent());
@@ -62,14 +62,14 @@ public class VotacaoClientTest {
     }
 
     @Test
-    public void consultar_detalhes_de_votacao_que_nao_existe_retorna_vazio() throws IOException {
+    public void consultar_detalhes_de_votacao_que_nao_existe_retorna_vazio() throws IOException, InterruptedException {
         String idVotacao = "1";
         Optional<DetalheVotacao> detalheOpt = client.consultarDetalhes(idVotacao);
         assertTrue(detalheOpt.isEmpty());
     }
 
     @Test
-    public void consultar_votos_retorna_lista_nao_paginada_de_votos() throws IOException {
+    public void consultar_votos_retorna_lista_nao_paginada_de_votos() throws IOException, InterruptedException {
         String idVotacao = "2293449-250";
         List<Voto> votos = client.consultarVotos(idVotacao);
         assertFalse(votos.isEmpty());
@@ -87,7 +87,7 @@ public class VotacaoClientTest {
     }
 
     @Test
-    public void consultar_orientacoes_de_votacao_retorna_lista_nao_paginada() throws IOException {
+    public void consultar_orientacoes_de_votacao_retorna_lista_nao_paginada() throws IOException, InterruptedException {
         String idVotacao = "2293449-250";
         List<OrientacaoVoto> orientacoes = client.consultarOrientacoes(idVotacao);
         assertFalse(orientacoes.isEmpty());

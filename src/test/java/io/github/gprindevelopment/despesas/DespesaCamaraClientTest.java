@@ -4,7 +4,7 @@ import io.github.gprindevelopment.dominio.Despesa;
 import io.github.gprindevelopment.dominio.Legislatura;
 import io.github.gprindevelopment.exception.RecursoNaoExisteException;
 import io.github.gprindevelopment.http.Pagina;
-import io.github.gprindevelopment.legislaturas.LegislaturaClient;
+import io.github.gprindevelopment.legislaturas.LegislaturaCamaraClient;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -18,12 +18,12 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class DespesaClientTest {
+public class DespesaCamaraClientTest {
 
-    private final DespesaClient client = new DespesaClient();
+    private final DespesaCamaraClient client = new DespesaCamaraClient();
 
     @Test
-    public void consulta_por_despesas_de_deputado_na_legislatura_retorna_despesas_paginado() throws IOException {
+    public void consulta_por_despesas_de_deputado_na_legislatura_retorna_despesas_paginado() throws IOException, InterruptedException {
         int legislatura = 56;
         int idDeputado = 76874;
         int itens = 10;
@@ -43,8 +43,8 @@ public class DespesaClientTest {
     }
 
     @Test
-    public void consulta_por_despesa_com_varias_legislaturas_retorna_despesas_das_legislaturas() throws IOException {
-        LegislaturaClient legislaturaClient = new LegislaturaClient();
+    public void consulta_por_despesa_com_varias_legislaturas_retorna_despesas_das_legislaturas() throws IOException, InterruptedException {
+        LegislaturaCamaraClient legislaturaClient = new LegislaturaCamaraClient();
         Optional<Legislatura> leg55Opt = legislaturaClient.consultarLegislaturaPorId(55);
         Optional<Legislatura> leg56Opt = legislaturaClient.consultarLegislaturaPorId(56);
         assertTrue(leg55Opt.isPresent());
@@ -70,7 +70,7 @@ public class DespesaClientTest {
     }
 
     @Test
-    public void consultar_despesas_com_ano_e_mes_retorna_datas_corretas() throws IOException {
+    public void consultar_despesas_com_ano_e_mes_retorna_datas_corretas() throws IOException, InterruptedException {
         int idDeputado = 160976;
         int itens = 50;
         int paginaAtual = 1;
@@ -101,7 +101,7 @@ public class DespesaClientTest {
     }
 
     @Test
-    public void deve_ser_possivel_usar_a_consulta_de_despesas_com_ano_e_mes_em_lista() throws IOException {
+    public void deve_ser_possivel_usar_a_consulta_de_despesas_com_ano_e_mes_em_lista() throws IOException, InterruptedException {
         int idDeputado = 160976;
         int itens = 50;
         int paginaAtual = 1;
