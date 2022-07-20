@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-public class ProposicaoCamaraClient extends CamaraClient {
+public class ProposicaoClient extends CamaraClient {
 
     public Pagina<Proposicao> consultar(ConsultaProposicao consulta) throws IOException, InterruptedException {
         return consultarComPaginacao(consulta, ConstantesApiCamara.PROPOSICAO_API_URL, Proposicao.class);

@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class VotacaoCamaraClient extends CamaraClient {
+public class VotacaoClient extends CamaraClient {
 
     public Pagina<Votacao> consultar(ConsultaVotacao consulta) throws IOException, InterruptedException {
         return consultarComPaginacao(consulta, ConstantesApiCamara.VOTACAO_API_URL, Votacao.class);

@@ -15,9 +15,9 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ProposicoesCamaraClientTest {
+public class ProposicaoClientTest {
 
-    private final ProposicaoCamaraClient client = new ProposicaoCamaraClient();
+    private final ProposicaoClient client = new ProposicaoClient();
 
     @Test
     public void consultar_proposicoes_por_deputado_autor_retorna_proposicoes() throws IOException, InterruptedException {

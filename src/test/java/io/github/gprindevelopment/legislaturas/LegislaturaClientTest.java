@@ -14,11 +14,11 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class LegislaturaCamaraClientTest {
+public class LegislaturaClientTest {
 
     private static final int ID_LEGISLATURA_CORRENTE = 56;
 
-    private final LegislaturaCamaraClient client = new LegislaturaCamaraClient();
+    private final LegislaturaClient client = new LegislaturaClient();
 
     @Test
     public void consultar_legislatura_corrente_retorna_56() throws IOException, URISyntaxException, InterruptedException {

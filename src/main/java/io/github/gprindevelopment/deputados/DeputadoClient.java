@@ -9,7 +9,7 @@ import io.github.gprindevelopment.http.RespostaCamara;
 import java.io.IOException;
 import java.util.Optional;
 
-public class DeputadoCamaraClient extends CamaraClient {
+public class DeputadoClient extends CamaraClient {
 
     public Optional<Deputado> consultarDeputadoPorId(int id) throws IOException, InterruptedException {
         RespostaCamara<Deputado> resposta = consultarPorId(String.valueOf(id), ConstantesApiCamara.DEPUTADO_API_URL, Deputado.class);

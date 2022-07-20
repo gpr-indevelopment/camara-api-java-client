@@ -6,7 +6,7 @@ import io.github.gprindevelopment.http.*;
 import java.io.IOException;
 import java.util.Optional;
 
-public class LegislaturaCamaraClient extends CamaraClient {
+public class LegislaturaClient extends CamaraClient {
 
     public Legislatura consultarLegislaturaAtual() throws IOException, InterruptedException {
         Consulta consulta = new Consulta.Builder()

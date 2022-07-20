@@ -15,9 +15,9 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class DeputadoCamaraClientTest {
+public class DeputadoClientTest {
 
-    private final DeputadoCamaraClient client = new DeputadoCamaraClient();
+    private final DeputadoClient client = new DeputadoClient();
 
     @Test
     public void consulta_deputado_por_id_retorna_deputado() throws IOException, InterruptedException {

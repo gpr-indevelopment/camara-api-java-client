@@ -4,7 +4,7 @@ import io.github.gprindevelopment.dominio.Despesa;
 import io.github.gprindevelopment.dominio.Legislatura;
 import io.github.gprindevelopment.exception.RecursoNaoExisteException;
 import io.github.gprindevelopment.http.Pagina;
-import io.github.gprindevelopment.legislaturas.LegislaturaCamaraClient;
+import io.github.gprindevelopment.legislaturas.LegislaturaClient;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -18,9 +18,9 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class DespesaCamaraClientTest {
+public class DespesaClientTest {
 
-    private final DespesaCamaraClient client = new DespesaCamaraClient();
+    private final DespesaClient client = new DespesaClient();
 
     @Test
     public void consulta_por_despesas_de_deputado_na_legislatura_retorna_despesas_paginado() throws IOException, InterruptedException {
@@ -44,7 +44,7 @@ public class DespesaCamaraClientTest {
 
     @Test
     public void consulta_por_despesa_com_varias_legislaturas_retorna_despesas_das_legislaturas() throws IOException, InterruptedException {
-        LegislaturaCamaraClient legislaturaClient = new LegislaturaCamaraClient();
+        LegislaturaClient legislaturaClient = new LegislaturaClient();
         Optional<Legislatura> leg55Opt = legislaturaClient.consultarLegislaturaPorId(55);
         Optional<Legislatura> leg56Opt = legislaturaClient.consultarLegislaturaPorId(56);
         assertTrue(leg55Opt.isPresent());

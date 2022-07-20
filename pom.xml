@@ -6,7 +6,7 @@
     <inceptionYear>2022</inceptionYear>
     <groupId>io.github.gpr-indevelopment</groupId>
     <artifactId>camara-api-java-client</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
     <packaging>jar</packaging>
 
     <name>Câmara API Java client</name>

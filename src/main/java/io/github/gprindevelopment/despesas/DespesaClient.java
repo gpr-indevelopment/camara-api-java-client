@@ -8,7 +8,7 @@ import io.github.gprindevelopment.http.Pagina;
 import java.io.IOException;
 
 
-public class DespesaCamaraClient extends CamaraClient {
+public class DespesaClient extends CamaraClient {
 
     public Pagina<Despesa> consultar(ConsultaDespesa consulta) throws IOException, InterruptedException {
         String[] segmentosPath = new String[]{String.valueOf(consulta.getIdDeputado()), "despesas"};
